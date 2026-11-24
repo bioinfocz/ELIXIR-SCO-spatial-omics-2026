@@ -1,19 +1,10 @@
 # TANGRAM
 # BM
 
-import os, re
-import scanpy as sc
-import scanpy.external as sce
-import seaborn as sns
-import matplotlib.pyplot as plt
-import pandas as pd
-import random
-import numpy as np
 import anndata as ad
-from collections import Counter
-import torch
+import pandas as pd
 
-wd = '/exports/humgen/bmanzato/spatial_workshop'
+spatial_wd = '/exports/humgen/bmanzato/spatial_workshop'
 
 adata_sc = ad.read_h5ad(f"{spatial_wd}/SpaGE_data/sc_adata_1percent.h5ad")
 
@@ -27,9 +18,6 @@ adata_section = ad.read_h5ad(f"{spatial_wd}/abc_download_root/expression_matrice
 
 
 import tangram as tg
-
-import matplotlib.pyplot as plt
-from sklearn.preprocessing import MinMaxScaler
 
 markers = list(set.intersection(set(adata_sc.var_names), set(adata_section.var_names)))
 

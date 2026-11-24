@@ -1,18 +1,10 @@
 #### Script to create a subset for the single-cell reference dataset from the Whole Mouse Brain dataset from Allen Brain Atlas
 ## BM 23-09-2024
 
-import os, re
-import scanpy as sc
-import scanpy.external as sce
-import seaborn as sns
-import matplotlib.pyplot as plt
-import pandas as pd
-import random
-import numpy as np
-import anndata as ad
-from collections import Counter
-
 from pathlib import Path
+
+import anndata as ad
+import numpy as np
 from abc_atlas_access.abc_atlas_cache.abc_project_cache import AbcProjectCache
 
 # Specify download base path
