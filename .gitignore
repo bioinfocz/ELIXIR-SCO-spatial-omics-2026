@@ -18,3 +18,4 @@ practicals/practical_3/data/*.zip
 .pixi/*
 !.pixi/config.toml
 **/*.quarto_ipynb
+__pycache__/

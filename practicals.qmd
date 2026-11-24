@@ -4,11 +4,12 @@ title: "Practicals"
 
 ## Introduction
 
-This course includes multiple practical exercises. During the four days we will go through practical 0 to 9 (more info in the [schedule](schedule.qmd)). Each practical has a dedicated directory in the [repository](https://github.com/elixir-europe-training/ELIXIR-SCO-spatial-omics-2026) under the `practicals/` directory. Each practical directory includes:
+This course includes multiple practical exercises. This version of the course covers practicals 0 to 5, 8 and 9 (more info in the [schedule](schedule.qmd)). Each practical has a dedicated directory in the [repository](https://github.com/elixir-europe-training/ELIXIR-SCO-spatial-omics-2026) under the `practicals/` directory. Each practical directory includes:
 
 - One or more notebooks with names starting with Practical[number] or p[number]. For example, for practical 1, we have a notebook called `Practical1_Segmentation_Cellpose.ipynb` 
-- A directory (`env`) with environment files
 - Any other files necessary for running the labs
+
+All practicals run in one shared Pixi environment, defined by `pixi.toml` and `pixi.lock` at the root of the repository.
 
 ## Working on the practicals
 
@@ -26,7 +27,7 @@ SciLifeLab Serve is an app-hosting platform provided by SciLifeLab Sweden. All p
 
 ![](./assets/serve/serve_lab_project.png)
 
-3. In the project, you can create Jupyter Lab apps and RStudio apps. Each practical requires its own app with its own environment. Jupyter Lab is used for all practicals except practical 7, which uses RStudio. To reduce memory usage, create the app only when you will start the practical, and delete the app after you have finished it. Choose the appropriate app and click _Create_.
+3. In the project, you can create Jupyter Lab apps. All practicals use Jupyter Lab. To reduce memory usage, create the app only when you will start the practical, and delete the app after you have finished it. Choose the appropriate app and click _Create_.
 
 ![](./assets/serve/serve_lab_app_types.png)
 
@@ -44,7 +45,7 @@ If the status does not turn to _Running_ within 5 minutes, click on the three do
 
 6. Click on the app name to open it in a new tab. If you are prompted for a password, input `spatial`.
 
-7. Once your app is open, download the files required for the practical (notebooks, data and any other relevant files). Open a terminal in the app (JupyterLab: _File_ → _New_ → _Terminal_; RStudio: the _Terminal_ tab next to the _Console_) and run
+7. Once your app is open, download the files required for the practical (notebooks, data and any other relevant files). Open a terminal in the app (_File_ → _New_ → _Terminal_) and run
 
 ```
 bash ~/download-labs.sh [practical number]
@@ -63,7 +64,7 @@ In rare cases it may happen that your notebook server suddenly restarts. This co
 
 #### Storage
 
-In the case of both JupyterLab and RStudio you have access to persistent storage. This is mounted to the folder `/home/jovyan/work` in both JupyterLab and RStudio. Files stored in this folder (_NB: only in this folder_) will be available even if a notebook suddenly restarts as well as between apps. You can also use a File Manager to manage these files (view, download, upload) outside of the apps. On the project page, scroll down to "Manage files" and click _Create_, then _Activate_ on the next page, and finally open the file manager in the same way as the other apps. 
+In JupyterLab you have access to persistent storage. This is mounted to the folder `/home/jovyan/work`. Files stored in this folder (_NB: only in this folder_) will be available even if a notebook suddenly restarts as well as between apps. You can also use a File Manager to manage these files (view, download, upload) outside of the apps. On the project page, scroll down to "Manage files" and click _Create_, then _Activate_ on the next page, and finally open the file manager in the same way as the other apps. 
 
 
 ### Option 2: Working locally
@@ -82,20 +83,6 @@ ghcr.io/elixir-europe-training/elixir-sco-spatial-omics-2026:practical-0-jupyter
 ```
 
 Jupyter lab should now be available from `localhost:8888`. Use password `spatial` when prompted.
-
-For the RStudio image of practical 7, the equivalent would be:
-
-```sh
-docker run \
---rm \
---platform=linux/amd64 \
--p 8787:8787 \
--v $PWD:/home/jovyan/work/ \
-ghcr.io/elixir-europe-training/elixir-sco-spatial-omics-2026:practical-7-rstudio-latest
-```
-
-Access Rstudio at `localhost:8787`.
-
 
 Once the you have accessed the app, see steps 7 and 8 above.
 

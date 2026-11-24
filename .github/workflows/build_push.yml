@@ -6,9 +6,9 @@ on:
       - main
     paths:
       - 'docker/jupyter/**'
-      - 'docker/rstudio/**'
       - 'docker/download_labs.sh'
-      - 'practicals/*/env/**'
+      - 'pixi.toml'
+      - 'pixi.lock'
       - '.github/workflows/build_push.yml'
   workflow_dispatch:
 
@@ -16,35 +16,8 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  build-matrix:
+  build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          # Jupyter containers for practicals 0-5
-          - practical: 0
-            ide: jupyter
-          - practical: 1
-            ide: jupyter
-          - practical: 2
-            ide: jupyter
-          - practical: 3
-            ide: jupyter
-          - practical: 4
-            ide: jupyter
-          - practical: 5
-            ide: jupyter
-          - practical: 6_part1
-            ide: jupyter
-          - practical: 6_part2
-            ide: jupyter
-          # RStudio container for practical 7
-          - practical: 7
-            ide: rstudio
-          - practical: 8
-            ide: jupyter
-          - practical: 9
-            ide: jupyter
 
     permissions:
       contents: read
@@ -77,18 +50,16 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ github.repository }}
           tags: |
-            type=raw,value=practical-${{ matrix.practical }}-${{ matrix.ide }}-${{ steps.version.outputs.timestamp }}
-            type=raw,value=practical-${{ matrix.practical }}-${{ matrix.ide }}-latest
+            type=raw,value=jupyter-${{ steps.version.outputs.timestamp }}
+            type=raw,value=jupyter-latest
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./docker/${{ matrix.ide }}/Dockerfile
+          file: ./docker/jupyter/Dockerfile
           platforms: linux/amd64
           push: true
-          build-args: |
-            PRAC=${{ matrix.practical }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha

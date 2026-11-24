@@ -1,7 +1,5 @@
 FROM ghcr.io/prefix-dev/pixi:latest AS build
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-ARG PRAC
-ENV PIXI_ENV_PATH=practicals/practical_${PRAC}/env
 
 WORKDIR /app
 # Install git and curl to fetch the environment files from the repo, then clean up apt cache to reduce image size
@@ -16,10 +14,10 @@ RUN n=0; \
     done && \
     rm -rf /var/lib/apt/lists/*
 
-COPY ${PIXI_ENV_PATH}/pixi.toml /app/
-COPY ${PIXI_ENV_PATH}/pixi.lock /app/
+# One environment for all practicals: the merged pixi env at the repo root
+COPY pixi.toml pixi.lock /app/
 
-# Install the selected environment (locked for reproducibility)
+# Install the environment (locked for reproducibility)
 RUN pixi install --locked --run-post-link-scripts
 
 ARG NB_UID=1000

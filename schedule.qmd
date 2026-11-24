@@ -41,10 +41,8 @@ title: "Schedule"
 | Time      	| Topic                                                     	| Teacher                           	|
 |-------------	|-------------------------------------------------------------	|------------------------------------	|
 | 09:00-09:45 	| Lecture: [Multi-slice spatial data integration](presentations/multislice_integration.pdf)      | Benedetta Manzato (LUMC, NL) |
-| 09:45-11:15 	| Practical 6: Multi-slice spatial data integration [Part A](practicals/html/p6_alignment_moscot.html) & [Part B](practicals/html/p6_alignment.html)   | Benedetta Manzato (LUMC, NL), Emma Vonk (LUMC, NL) |
 | 11:15-12:00 	| Lecture: [Spatial statistics](presentations/spatial_stats.pdf)     	| Peiying Cai (UZH/SIB, CH)	                                |
 | 12:00-13:00   | Lunch                                                         |                                       |
-| 13:00-14:30 	| Practical 7: Spatial statistics [Part A](practicals/html/Practical7-01-point-pattern-analysis-vignette-solution.html) & [Part B](practicals/html/Practical7-02-lattice-data-analysis-vignette-solution.html)   | Peiying Cai (UZH/SIB, CH), Jennifer Fransson (NBIS, SE) |
 | 14:30-14:45 	| Break                                                       	|                                    	|
 | 14:45-15:30 	| Lecture: [Spatially aware clustering](presentations/spatially_aware_clustering.pdf)   	| Ahmed Mahfouz (LUMC, NL)         	|
 | 15:30-16:15 	| Practical 8: [Domain identification and niche reconstruction](practicals/html/p8_niche_domain.html) 	| Benedetta Manzato (LUMC, NL), Emma Vonk (LUMC, NL)        	|

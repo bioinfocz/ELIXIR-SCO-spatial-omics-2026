@@ -6,19 +6,17 @@
 #   bash download_labs.sh [OPTIONS] [COMMAND]
 #
 # Options (all optional, shown with defaults):
-#   -r, --repo          OWNER/NAME  GitHub repository  (elixir-europe-training/ELIXIR-SCO-spatial-omics-2026)
+#   -r, --repo          OWNER/NAME  GitHub repository  (bioinfocz/ELIXIR-SCO-spatial-omics-2026)
 #   -b, --branch        BRANCH      Git branch          (main)
 #   -p, --parent        DIR         Folder in repo      (practicals)
-#   -n, --n-practicals  N           Number of practicals (10)
+#   -l, --practicals    "N N ..."   Practical numbers  (0 1 2 3 4 5 8 9)
 #   -d, --dest          PATH        Local destination   ($LABS_DEST, else work/)
 #   -f, --data-file     PATH        Dataset TSV         (fetched from the repo by default)
 #
 # Commands:
 #   (none)              Interactive menu
 #   all                 Download all practicals
-#   0 3 7               Download practical_0, _3, _7
-#   6                   Download both parts of practical_6 (6_part1 + 6_part2)
-#   6_part1             Download only practical_6_part1
+#   0 3 8               Download practical_0, _3, _8
 #   reset 2             Remove practical_2 (keeps its downloaded data)
 #   reset all           Remove all practicals (keeps downloaded data)
 #   reset 2 --data      Remove practical_2 AND its dataset(s) under data/,
@@ -36,10 +34,10 @@
 set -euo pipefail
 
 # ---------- Config ----------
-REPO="elixir-europe-training/ELIXIR-SCO-spatial-omics-2026"
+REPO="bioinfocz/ELIXIR-SCO-spatial-omics-2026"
 BRANCH="main"
 PARENT="practicals"
-N_PRACTICALS=10
+PRACTICALS="0 1 2 3 4 5 8 9"   # practicals 6 and 7 are not part of this fork
 # Container images set LABS_DEST to the mounted volume so data persists
 DEST="${LABS_DEST:-work/}"
 # Zenodo archives to download and extract into the central <DEST>/data/ directory.
@@ -53,10 +51,10 @@ declare -A practical_dois=()
 # fetched fresh from the repo (see fetch_data_file) instead of being baked
 # into a container image; pass -f/--data-file to use a local file instead.
 DATA_FILE=""
-# Some practicals are split into several folders on GitHub (e.g. practical_6 ->
-# practical_6_part1 + practical_6_part2). Map the numeric id to its part suffixes
-# here; a plain number with no entry here downloads a single practical_<n> folder.
-declare -A PRACTICAL_PARTS=( [6]="part1 part2" )
+# A practical split into several folders on GitHub (e.g. practical_<n>_part1 +
+# practical_<n>_part2) gets an entry here mapping <n> to its part suffixes, e.g.
+# ( [6]="part1 part2" ); a plain number with no entry downloads practical_<n>.
+declare -A PRACTICAL_PARTS=()
 
 # ---------- Colors ----------
 if [ -t 1 ]; then
@@ -331,7 +329,7 @@ expand_practical_arg() {
 # their parts. Used by the status view and reset-all.
 all_practical_names() {
     local i
-    for i in $(seq 0 $((N_PRACTICALS - 1))); do
+    for i in $PRACTICALS; do
         expand_practical_arg "$i"
     done
 }
@@ -506,7 +504,7 @@ interactive_menu() {
     while true; do
         show_status
         echo -e "${BOLD}Options:${RESET}"
-        echo "  [0-9]   Download a specific practical (e.g. type '3', or '6' for both parts of practical 6)"
+        echo "  [0-9]   Download a specific practical (e.g. type '3')"
         echo "  a       Download ALL practicals"
         echo "  r N     Reset (delete) practical N, keeping its downloaded data (e.g. 'r 2')"
         echo "  rd N    Reset practical N AND its downloaded data (e.g. 'rd 2')"
@@ -541,7 +539,7 @@ while [[ $# -gt 0 ]]; do
         -r|--repo)           REPO="$2";          shift 2 ;;
         -b|--branch)         BRANCH="$2";        shift 2 ;;
         -p|--parent)         PARENT="$2";        shift 2 ;;
-        -n|--n-practicals)   N_PRACTICALS="$2";  shift 2 ;;
+        -l|--practicals)     PRACTICALS="$2";    shift 2 ;;
         -d|--dest)           DEST="$2";          shift 2 ;;
         -f|--data-file)      DATA_FILE="$2";     shift 2 ;;
         --) shift; break ;;

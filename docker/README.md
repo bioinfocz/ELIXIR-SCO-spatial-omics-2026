@@ -2,30 +2,25 @@
 
 A more comprehensive `Wiki` page is now available [here](https://github.com/elixir-europe-training/ELIXIR-SCO-spatial-omics-2026/wiki/Contributor-Wiki).
 
-## How to create Pixi environments
+## The Pixi environment
 
-Each practical has its own Pixi environment defined in the `practicals/practical_X/env/` directory (replace `X` with the practical number). This right now contains a basic environment that enables `Jupyterlab` or `Rstudio` to run, but you can customize it by adding any additional packages you need for the practical. Feel free to modify the `pixi.toml` file to remove conflicting packages but highlight them during the pull request review so we can discuss them.
-
-To create the environment for a specific practical, navigate to the `env` directory and run:
+All practicals share one Pixi environment, defined by `pixi.toml` and `pixi.lock` at the repo root. To add packages, run from the repo root:
 
 ```bash
-cd practicals/practical_X/env/
 pixi add --no-install <package-name-a> <package-name-b> ...
 ```
-Replace `<package-name-a>`, `<package-name-b>`, etc. with the actual package names you want to include in the environment. After adding the necessary packages
 
-## How to create your containers
+Then run `pixi install` and check that the practical notebooks still execute.
 
-Go to the main repo directory (not this `docker` directory) and run the following command to build the Jupyter container for a specific practical (replace `X` with the practical number):
+## How to create the container
+
+Go to the main repo directory (not this `docker` directory) and run:
 
 ```bash
-docker build --platform linux/amd64 --build-arg PRAC=X -t <YOUR-DOCKERHUB-ID>/elixir-prac-0:<version> -f docker/jupyter/Dockerfile .
-
-# For practical 7 (OBS! Using the Restudio container.): 
-# docker build --platform linux/amd64 --build-arg PRAC=7 -t <YOUR-DOCKERHUB-ID>/elixir-prac-7:<version> -f docker/rstudio/Dockerfile .
+docker build --platform linux/amd64 -t <YOUR-DOCKERHUB-ID>/elixir-spatial:<version> -f docker/jupyter/Dockerfile .
 ```
 
-Replace `<YOUR-DOCKERHUB-ID>` with your actual Docker Hub username and `<version>` with the version tag you want to use (e.g., `v1.0`) and `X` with the practical number (e.g., `0` for Practical 0). This command will build the Docker image for the specified practical and tag it appropriately. Then make sure to push the container to dockerhub with e.g. `docker push <YOUR-DOCKERHUB-ID>/elixir-prac-7:<version>` so that it is available to pull on serve. 
+Replace `<YOUR-DOCKERHUB-ID>` with your actual Docker Hub username and `<version>` with the version tag you want to use (e.g., `v1.0`). The image holds the environment for all practicals. Then push it to Docker Hub with e.g. `docker push <YOUR-DOCKERHUB-ID>/elixir-spatial:<version>` so that it is available to pull on Serve.
 
 # Running containers on Serve
 
@@ -34,7 +29,7 @@ The final containers will be run on SciLifeLab [Serve](https://serve.scilifelab.
 * Mount path: `/home/jovyan/work`
 * Hardware: Make sure to have a large enough allocation.
 * Port: `8888`
-* Image: `docker.io/<YOUR-DOCKERHUB-ID>/elixir-prac-7:<version>`
+* Image: `docker.io/<YOUR-DOCKERHUB-ID>/elixir-spatial:<version>`
 * Title: any suitable title.
 
 The rest of the fields can be left blank.
@@ -73,10 +68,10 @@ All options are optional and fall back to the defaults shown below.
 
 | Flag | Long form | Default | Description |
 |------|-----------|---------|-------------|
-| `-r` | `--repo` | `elixir-europe-training/ELIXIR-SCO-spatial-omics-2026` | GitHub repository (`OWNER/NAME`) |
+| `-r` | `--repo` | `bioinfocz/ELIXIR-SCO-spatial-omics-2026` | GitHub repository (`OWNER/NAME`) |
 | `-b` | `--branch` | `main` | Git branch to download from |
 | `-p` | `--parent` | `practicals` | Folder inside the repo that contains the practicals |
-| `-n` | `--n-practicals` | `10` | Total number of practicals (used by the status view and reset-all) |
+| `-l` | `--practicals` | `"0 1 2 3 4 5 8 9"` | Practical numbers (used by the status view and reset-all) |
 | `-d` | `--dest` | `work/` | Local destination directory |
 | `-f` | `--data-file` | `practical_data.tsv` (next to the script) | TSV manifest mapping practicals to Zenodo dataset URL(s) |
 
@@ -92,16 +87,11 @@ bash download_labs.sh --dest ~/mywork --branch dev all
 |---------|-------------|
 | *(none)* | Open the interactive menu |
 | `all` | Download all practicals |
-| `0 3 7` | Download specific practicals by number |
-| `6` | Download both parts of practical 6 (`practical_6_part1` + `practical_6_part2`) |
-| `6_part1` | Download only `practical_6_part1` |
+| `0 3 8` | Download specific practicals by number |
 | `reset 2` | Delete practical 2 (keeps its downloaded data) |
-| `reset 6` | Delete both parts of practical 6 |
 | `reset all` | Delete all practicals |
 | `reset 2 --data` | Delete practical 2 **and** its dataset(s), unless still shared with a practical you're not removing |
 | `reset all --data` | Delete all practicals and all downloaded data |
-
-Practical 6 is split across two folders in the repo (`practical_6_part1`, `practical_6_part2`). The script treats them as one logical practical numbered `6` — asking for `6` fetches/removes both parts — but you can still target a single part with `6_part1` or `6_part2` if you only need one.
 
 In the interactive menu, the equivalents are `r N` / `R` (reset, keep data) and `rd N` / `RD` (reset and also delete data).
 
@@ -153,4 +143,4 @@ See the [Contributor Wiki](https://github.com/elixir-europe-training/ELIXIR-SCO-
 
 # GitHub Actions
 
-GitHub Actions are set up to automatically build and push the Docker images to GitHub container registry (GHCR) whenever changes are made to the `docker/` directory or the `practicals/*/env/` directories. This ensures that the latest versions of the images are always available for use. The workflow is defined in the `.github/workflows/build_push.yml` file, which specifies the conditions under which the images should be built and pushed.
+GitHub Actions are set up to build and push the Docker image to GitHub container registry (GHCR) whenever changes are made to `docker/jupyter/`, `docker/download_labs.sh` or the root `pixi.toml`/`pixi.lock`. On the bioinfocz fork the workflows are currently disabled. The workflow is defined in the `.github/workflows/build_push.yml` file, which specifies the conditions under which the images should be built and pushed.
