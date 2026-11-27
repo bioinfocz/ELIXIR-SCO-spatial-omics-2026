@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Marker genes</title>
+<script src="./support.js"></script>
+<script src="./deck.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0089cf}a:hover{color:#006ba1}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.in{animation:rise .5s cubic-bezier(.2,0,.2,1) both}
+code{font-family:inherit;font-weight:600;color:#006ba1}
+</style>
+</helmet>
+<div style="width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#ffffff;font-family:'Barlow Semi Condensed',sans-serif;color:#000000">
+  <div style="position:absolute;left:64px;top:40px;right:64px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f04e26">Marker genes</div>
+      <h2 style="margin:0;font-size:38px;line-height:1.1;font-weight:700;letter-spacing:-0.01em">Marker genes turn cluster numbers into cell types</h2>
+    </div>
+    <div style="position:absolute;right:0;top:-8px;display:flex;gap:4px">
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Data</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">QC</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Filter</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Normalize</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Cluster</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#0089cf;color:#ffffff">Markers</span>
+    </div>
+  </div>
+  <div style="position:absolute;left:64px;top:140px;width:740px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 20px">
+    <div class="in" style="display:flex;flex-direction:column;gap:2px;animation-delay:.1s">
+      <img src="figs/l2/marker_Slc17a7.png" alt="Map of Slc17a7 expression: high in cortex and hippocampus" style="width:100%;height:200px;object-fit:contain">
+      <div style="font-size:18px"><b>Slc17a7</b> · excitatory neurons · clusters 0, 6</div>
+    </div>
+    <div class="in" style="display:flex;flex-direction:column;gap:2px;animation-delay:.3s">
+      <img src="figs/l2/marker_Plp1.png" alt="Map of Plp1 expression: high in white matter tracts" style="width:100%;height:200px;object-fit:contain">
+      <div style="font-size:18px"><b>Plp1</b> · oligodendrocytes · clusters 3, 11</div>
+    </div>
+    <div class="in" style="display:flex;flex-direction:column;gap:2px;animation-delay:.5s">
+      <img src="figs/l2/marker_Gad1.png" alt="Map of Gad1 expression: scattered cells across the section" style="width:100%;height:200px;object-fit:contain">
+      <div style="font-size:18px"><b>Gad1</b> · inhibitory neurons · cluster 8</div>
+    </div>
+    <div class="in" style="display:flex;flex-direction:column;gap:2px;animation-delay:.7s">
+      <img src="figs/l2/marker_Prox1.png" alt="Map of Prox1 expression: a bright curved band in the dentate gyrus of the hippocampus" style="width:100%;height:200px;object-fit:contain">
+      <div style="font-size:18px"><b>Prox1</b> · dentate gyrus granule cells · cluster 21</div>
+    </div>
+  </div>
+  <div style="position:absolute;left:840px;top:146px;width:376px;display:flex;flex-direction:column;gap:12px">
+    <div style="font-size:20px;font-weight:700">How a marker is found</div>
+    <div style="font-size:18px;line-height:1.4;color:#333333">For each gene: rank all cells by expression. Do the cells of this cluster rank <b>higher</b> than all other cells? (Wilcoxon rank-sum test)</div>
+    <div style="display:flex;gap:4px;align-items:flex-end;height:70px">
+      <sc-for list="{{ranks}}" as="r" hint-placeholder-count="10">
+        <div style="flex:1;height:{{r.h}}px;background:{{r.c}};border-radius:4px 4px 0 0"></div>
+      </sc-for>
+    </div>
+    <div style="font-size:15px;color:#525252">toy: 10 cells sorted by expression; orange = in the cluster</div>
+    <div style="background:#ebf6fb;padding:12px 16px;font-size:17px;line-height:1.4;color:#003e5d">Check each marker <b>on the map</b>: a real cell type marker should light up where that cell type lives. Name clusters by markers, not by number.</div>
+  </div>
+  <div style="position:absolute;left:64px;top:610px;width:1152px;font-size:17px;color:#525252">Several clusters share a top marker (Plp1: clusters 3 and 11; Slc17a7: 0 and 6). Look beyond the top gene.</div>
+  <div style="position:absolute;left:64px;right:64px;bottom:0;height:48px;border-top:1px solid #dedede;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div style="font-size:12px;color:#737373">Top Wilcoxon marker per Leiden cluster, library-size normalized Practical 2 data.</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:14px;color:#525252">
+      <a href="s23.dc.html" aria-label="Previous slide" style="text-decoration:none;padding:8px 10px">←</a>
+      <span>24 / 26</span>
+      <a href="s25.dc.html" aria-label="Next slide" style="text-decoration:none;padding:8px 10px">→</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const inC = [false, false, true, false, false, true, false, true, true, true];
+    const ranks = inC.map((c, i) => ({ h: 10 + i * 6, c: c ? '#f04e26' : '#c7c7c7' }));
+    return { ranks };
+  }
+}
+</script>
+</body>
+</html>

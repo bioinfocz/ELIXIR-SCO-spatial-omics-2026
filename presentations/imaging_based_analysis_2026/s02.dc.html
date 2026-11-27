@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>scRNA-seq vs imaging-based spatial</title>
+<script src="./support.js"></script>
+<script src="./deck.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0089cf}a:hover{color:#006ba1}
+@keyframes dissoc{0%,15%{transform:translate(0,0)}55%,100%{transform:translate(var(--dx),var(--dy))}}
+.mv{animation:dissoc 5s cubic-bezier(.2,0,.2,1) infinite alternate}
+@keyframes blink{0%,100%{opacity:0;transform:scale(.3)}40%,60%{opacity:1;transform:scale(1)}}
+.mol{animation:blink 2.6s ease-in-out infinite}
+</style>
+</helmet>
+<div style="width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#ffffff;font-family:'Barlow Semi Condensed',sans-serif;color:#000000">
+  <div style="position:absolute;left:64px;top:40px;right:64px;display:flex;flex-direction:column;gap:6px">
+    <div style="font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f04e26">Why spatial is different</div>
+    <h2 style="margin:0;font-size:38px;line-height:1.1;font-weight:700;letter-spacing:-0.01em">You know scRNA-seq. What changes when cells stay in place?</h2>
+  </div>
+  <div style="position:absolute;left:64px;top:150px;width:560px;height:250px;border:1px solid #dedede;background:#f7f7f7">
+    <div style="position:absolute;left:16px;top:12px;font-size:18px;font-weight:600;color:#333333">scRNA-seq: dissociate, then sequence</div>
+    <div style="position:absolute;left:40px;top:56px;width:150px;height:150px;border:2px dashed #c7c7c7"></div>
+    <sc-for list="{{scCells}}" as="c" hint-placeholder-count="12">
+      <div class="mv" style="position:absolute;left:{{c.x}}px;top:{{c.y}}px;width:26px;height:26px;border-radius:50%;background:{{c.col}};--dx:{{c.dx}}px;--dy:{{c.dy}}px"></div>
+    </sc-for>
+    <sc-for list="{{drops}}" as="d" hint-placeholder-count="12">
+      <div style="position:absolute;left:{{d.x}}px;top:182px;width:34px;height:34px;border-radius:50%;border:1.5px solid #73bee5"></div>
+    </sc-for>
+    <div style="position:absolute;left:250px;top:120px;font-size:15px;color:#525252">one droplet = one cell</div>
+  </div>
+  <div style="position:absolute;left:656px;top:150px;width:560px;height:250px;border:1px solid #dedede;background:#f7f7f7">
+    <div style="position:absolute;left:16px;top:12px;font-size:18px;font-weight:600;color:#333333">Imaging-based spatial: cells stay, molecules light up</div>
+    <sc-for list="{{spCells}}" as="c" hint-placeholder-count="12">
+      <div style="position:absolute;left:{{c.x}}px;top:{{c.y}}px;width:44px;height:44px;border-radius:46% 54% 50% 50%;border:1.5px solid #9e9e9e;background:#ffffff"></div>
+    </sc-for>
+    <sc-for list="{{mols}}" as="m" hint-placeholder-count="30">
+      <div class="mol" style="position:absolute;left:{{m.x}}px;top:{{m.y}}px;width:7px;height:7px;border-radius:50%;background:{{m.col}};animation-delay:{{m.t}}s"></div>
+    </sc-for>
+  </div>
+  <div style="position:absolute;left:64px;top:424px;width:1152px;font-size:18px;color:#333333">
+    <div style="display:grid;grid-template-columns:200px minmax(0,1fr) minmax(0,1fr);border-top:1px solid #dedede">
+      <div style="padding:8px 0;font-weight:600">Genes</div><div style="padding:8px 0">whole transcriptome (~20,000)</div><div style="padding:8px 0">a targeted <b>panel</b>: hundreds to thousands (ours: 347)</div>
+    </div>
+    <div style="display:grid;grid-template-columns:200px minmax(0,1fr) minmax(0,1fr);border-top:1px solid #dedede">
+      <div style="padding:8px 0;font-weight:600">A count is</div><div style="padding:8px 0">a sequencing read (UMI)</div><div style="padding:8px 0">a dot decoded from fluorescence images</div>
+    </div>
+    <div style="display:grid;grid-template-columns:200px minmax(0,1fr) minmax(0,1fr);border-top:1px solid #dedede">
+      <div style="padding:8px 0;font-weight:600">A cell is</div><div style="padding:8px 0">a droplet barcode</div><div style="padding:8px 0">a polygon drawn by <b>segmentation</b></div>
+    </div>
+    <div style="display:grid;grid-template-columns:200px minmax(0,1fr) minmax(0,1fr);border-top:1px solid #dedede;border-bottom:1px solid #dedede">
+      <div style="padding:8px 0;font-weight:600">You get</div><div style="padding:8px 0">cells × genes</div><div style="padding:8px 0">cells × genes <b style="color:#0089cf">+ x, y coordinates + image</b></div>
+    </div>
+  </div>
+  <div style="position:absolute;left:64px;right:64px;bottom:0;height:48px;border-top:1px solid #dedede;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div style="font-size:12px;color:#737373">Overview of technologies: Moses &amp; Pachter, Nat Methods 2022. Platform details: technology lecture (Day 1).</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:14px;color:#525252">
+      <a href="Main.dc.html" aria-label="Previous slide" style="text-decoration:none;padding:8px 10px">←</a>
+      <span>02 / 26</span>
+      <a href="s03.dc.html" aria-label="Next slide" style="text-decoration:none;padding:8px 10px">→</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const cols = ['#0089cf', '#f04e26', '#003e5d', '#73bee5'];
+    const scCells = [], drops = [], spCells = [], mols = [];
+    for (let i = 0; i < 12; i++) {
+      const gx = 46 + (i % 4) * 36, gy = 62 + Math.floor(i / 4) * 44 + (i % 2) * 10;
+      const tx = 214 + i * 27, ty = 186;
+      scCells.push({ x: gx, y: gy, col: cols[i % 4], dx: tx - gx, dy: ty - gy });
+    }
+    for (let i = 0; i < 12; i++) drops.push({ x: 210 + i * 27 });
+    let s = 11;
+    const r = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+    for (let i = 0; i < 18; i++) {
+      const x = 28 + (i % 6) * 86 + (Math.floor(i / 6) % 2) * 30, y = 56 + Math.floor(i / 6) * 60;
+      spCells.push({ x, y });
+      const col = cols[i % 4];
+      for (let k = 0; k < 3; k++) mols.push({ x: x + 10 + r() * 24, y: y + 10 + r() * 24, col, t: (r() * 2.6).toFixed(2) });
+    }
+    return { scCells, drops, spCells, mols };
+  }
+}
+</script>
+</body>
+</html>

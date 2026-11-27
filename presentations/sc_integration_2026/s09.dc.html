@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SpaGE idea</title>
+<script src="./support.js"></script>
+<script src="./deck.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0089cf}a:hover{color:#006ba1}
+.ph{transition:opacity .4s}
+</style>
+</helmet>
+<div style="width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#ffffff;font-family:'Barlow Semi Condensed',sans-serif;color:#000000">
+  <div style="position:absolute;left:64px;top:40px;right:64px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f04e26">SpaGE · the idea</div>
+      <h2 style="margin:0;font-size:38px;line-height:1.1;font-weight:700;letter-spacing:-0.01em">Find similar reference cells, borrow their missing genes</h2>
+    </div>
+    <div style="position:absolute;right:0;top:-8px;display:flex;gap:4px">
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Data</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#0089cf;color:#ffffff">SpaGE</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Tangram</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">cell2location</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Compare</span>
+    </div>
+  </div>
+  <div style="position:absolute;left:64px;top:146px;width:620px;height:440px;background:#f7f7f7;border:1px solid #dedede">
+    <div style="position:absolute;left:14px;top:10px;font-size:16px;color:#525252">space of the shared genes</div>
+    <svg viewBox="0 0 620 440" style="position:absolute;left:0;top:0;width:620px;height:440px" role="img" aria-label="Reference cells in orange; one spatial cell in blue is linked to its five nearest reference cells">
+      <sc-for list="{{links}}" as="l" hint-placeholder-count="5"><line x1="300" y1="220" x2="{{l.x}}" y2="{{l.y}}" stroke="#0089cf" stroke-width="2.5" opacity="{{l.o}}"></line></sc-for>
+      <sc-for list="{{refs}}" as="p" hint-placeholder-count="40"><circle cx="{{p.x}}" cy="{{p.y}}" r="{{p.r}}" fill="{{p.c}}"></circle></sc-for>
+      <circle cx="300" cy="220" r="14" fill="#0089cf" stroke="#ffffff" stroke-width="3" opacity="{{qOp}}"></circle>
+    </svg>
+  </div>
+  <div style="position:absolute;left:720px;top:150px;width:496px;display:flex;flex-direction:column;gap:16px">
+    <div class="ph" style="display:flex;gap:12px;align-items:flex-start;opacity:{{p1}}">
+      <div style="width:34px;height:34px;flex:none;border-radius:50%;background:#0089cf;color:#ffffff;display:flex;align-items:center;justify-content:center;font-weight:700">1</div>
+      <div style="font-size:19px;line-height:1.4;color:#333333">Describe every cell, spatial and reference, by the <b>shared genes</b> only.</div>
+    </div>
+    <div class="ph" style="display:flex;gap:12px;align-items:flex-start;opacity:{{p2}}">
+      <div style="width:34px;height:34px;flex:none;border-radius:50%;background:#0089cf;color:#ffffff;display:flex;align-items:center;justify-content:center;font-weight:700">2</div>
+      <div style="font-size:19px;line-height:1.4;color:#333333">For a spatial cell, find its <b>k nearest</b> reference cells (SpaGE: k = 50, cosine distance).</div>
+    </div>
+    <div class="ph" style="display:flex;gap:12px;align-items:flex-start;opacity:{{p3}}">
+      <div style="width:34px;height:34px;flex:none;border-radius:50%;background:#f04e26;color:#ffffff;display:flex;align-items:center;justify-content:center;font-weight:700">3</div>
+      <div style="font-size:19px;line-height:1.4;color:#333333">Its predicted value for an unmeasured gene = <b>weighted average</b> over those neighbours.</div>
+    </div>
+    <div style="background:#fef1ee;padding:14px 18px;font-size:18px;line-height:1.4;color:#6c2311;margin-top:6px"><b>The catch:</b> spatial and scRNA-seq data differ technically, so "nearest" in raw shared-gene space can be misleading. SpaGE first aligns the two datasets (next slide).</div>
+  </div>
+  <div style="position:absolute;left:64px;right:64px;bottom:0;height:48px;border-top:1px solid #dedede;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div style="font-size:12px;color:#737373">Abdelaal, Mourragui, Mahfouz &amp; Reinders, Nucleic Acids Res 2020 (k = 50, cosine distance, weighted average). Points: toy illustration.</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:14px;color:#525252">
+      <a href="s08.dc.html" aria-label="Previous slide" style="text-decoration:none;padding:8px 10px">←</a>
+      <span>09 / 24</span>
+      <a href="s10.dc.html" aria-label="Next slide" style="text-decoration:none;padding:8px 10px">→</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  componentDidMount() { this.t = setInterval(() => this.setState({ ph: (((this.state && this.state.ph) || 0) + 1) % 5 }), 1500); }
+  componentWillUnmount() { clearInterval(this.t); }
+  renderVals() {
+    const ph = (this.state && this.state.ph != null) ? this.state.ph : 4;
+    let s = 21;
+    const r = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+    const refs = [];
+    // keep background points outside the 5 neighbours' radius, so the 5 shown are truly the nearest
+    while (refs.length < 40) { const p = { x: 40 + r() * 540, y: 50 + r() * 360 }; if (Math.hypot(p.x - 300, p.y - 220) >= 75) refs.push(p); }
+    const near = [[262, 196], [340, 240], [288, 268], [326, 182], [252, 238]];
+    near.forEach(([x, y]) => refs.push({ x, y, near: true }));
+    const refsOut = refs.map(p => ({ x: p.x.toFixed(0), y: p.y.toFixed(0), r: p.near && ph >= 2 ? 10 : 7, c: p.near && ph >= 3 ? '#f04e26' : '#f79e88' }));
+    const links = near.map(([x, y]) => ({ x, y, o: ph >= 2 ? 1 : 0 }));
+    return { refs: refsOut, links, qOp: ph >= 1 ? 1 : 0.15, p1: ph >= 1 ? 1 : 0.3, p2: ph >= 2 ? 1 : 0.3, p3: ph >= 3 ? 1 : 0.3 };
+  }
+}
+</script>
+</body>
+</html>

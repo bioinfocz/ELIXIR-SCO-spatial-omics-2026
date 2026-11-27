@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Summary</title>
+<script src="./support.js"></script>
+<script src="./deck.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0089cf}a:hover{color:#006ba1}
+@keyframes tick{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
+.row{animation:tick .45s cubic-bezier(.2,0,.2,1) both}
+</style>
+</helmet>
+<div style="width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#ffffff;font-family:'Barlow Semi Condensed',sans-serif;color:#000000">
+  <div style="position:absolute;left:0;top:0;width:12px;height:720px;background:#0089cf"></div>
+  <div style="position:absolute;left:64px;top:40px;right:64px;display:flex;flex-direction:column;gap:6px">
+    <div style="font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f04e26">Summary</div>
+    <h2 style="margin:0;font-size:38px;line-height:1.1;font-weight:700;letter-spacing:-0.01em">A checklist for your first imaging-based dataset</h2>
+  </div>
+  <div style="position:absolute;left:64px;top:140px;width:760px;display:flex;flex-direction:column;gap:14px">
+    <sc-for list="{{items}}" as="it" hint-placeholder-count="7">
+      <div class="row" style="display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;align-items:start;animation-delay:{{it.t}}s">
+        <div style="width:32px;height:32px;border-radius:50%;background:{{it.col}};color:#ffffff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700">{{it.n}}</div>
+        <div style="font-size:20px;line-height:1.35;color:#333333"><b style="color:#000000">{{it.head}}</b> {{it.body}}</div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="position:absolute;left:850px;top:150px;width:366px;display:flex;flex-direction:column;gap:16px">
+    <div style="background:#0089cf;color:#ffffff;padding:22px 24px;display:flex;flex-direction:column;gap:10px">
+      <div style="font-size:15px;font-weight:600;letter-spacing:.1em;text-transform:uppercase">Now: Practical 2</div>
+      <div style="font-size:22px;font-weight:700;line-height:1.2">Imaging-based analysis and QC</div>
+      <div style="font-size:18px;line-height:1.4">Same Xenium section. You will make every plot from this lecture yourself and choose your own cut-offs.</div>
+    </div>
+    <div style="font-size:17px;line-height:1.45;color:#525252">Questions to keep in mind during the practical:<br>Which normalization separates the cortical layers best? Which cells does your filtering remove, and where are they?</div>
+  </div>
+  <div style="position:absolute;left:64px;right:64px;bottom:0;height:48px;border-top:1px solid #dedede;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div style="font-size:12px;color:#737373">Full reference list in the printed speaker notes. Lecture adapted from C. Avenel (NBIS).</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:14px;color:#525252">
+      <a href="s25.dc.html" aria-label="Previous slide" style="text-decoration:none;padding:8px 10px">←</a>
+      <span>26 / 26</span>
+      <a href="Main.dc.html" aria-label="Back to the title slide" style="text-decoration:none;padding:8px 10px">↺</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const raw = [
+      ['Know your data.', 'Molecules, cells, polygons and images; the count table is already a summary.'],
+      ['Check the run.', 'qv pass rate and control counts tell you about background and decoding.'],
+      ['Map every QC metric.', 'Regional problems are invisible in histograms.'],
+      ['Filter in two steps.', 'Remove bad regions first, then outlier cells. Plot what you remove.'],
+      ['Choose normalization on purpose.', 'Library size depends on the panel; area depends on segmentation.'],
+      ['Cluster, then check on the tissue.', 'Clusters should match anatomy and markers.'],
+      ['Remember the panel.', 'No probe, no signal; neighbours can leak in.'],
+    ];
+    const items = raw.map(([head, body], i) => ({ n: i + 1, head, body, t: (0.1 + i * 0.25).toFixed(2), col: i < 6 ? '#0089cf' : '#f04e26' }));
+    return { items };
+  }
+}
+</script>
+</body>
+</html>

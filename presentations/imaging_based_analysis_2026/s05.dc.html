@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Our dataset</title>
+<script src="./support.js"></script>
+<script src="./deck.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0089cf}a:hover{color:#006ba1}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.tile{animation:rise .5s cubic-bezier(.2,0,.2,1) both}
+</style>
+</helmet>
+<div style="width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#ffffff;font-family:'Barlow Semi Condensed',sans-serif;color:#000000">
+  <div style="position:absolute;left:64px;top:40px;right:64px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f04e26">The data</div>
+      <h2 style="margin:0;font-size:38px;line-height:1.1;font-weight:700;letter-spacing:-0.01em">Our dataset: one mouse brain hemisphere on Xenium</h2>
+    </div>
+    <div style="position:absolute;right:0;top:-8px;display:flex;gap:4px">
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#0089cf;color:#ffffff">Data</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">QC</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Filter</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Normalize</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Cluster</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Markers</span>
+    </div>
+  </div>
+  <div style="position:absolute;left:64px;top:140px;width:650px;display:flex;flex-direction:column;gap:10px">
+    <img src="figs/l2/map_total_counts.png" alt="Map of the brain hemisphere, each cell coloured by its number of transcripts from orange (few) to dark blue (many); an orange band runs along the top edge" style="width:650px;height:483px;object-fit:contain">
+    <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:#525252">
+      <span>few</span>
+      <div style="width:160px;height:10px;background:linear-gradient(90deg,#f04e26,#f79e88,#73bee5,#0089cf,#003e5d)"></div>
+      <span>many transcripts per cell</span>
+    </div>
+  </div>
+  <div style="position:absolute;left:760px;top:150px;width:456px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px">
+    <div class="tile" style="border:1px solid #dedede;padding:16px 18px;animation-delay:.1s">
+      <div style="font-size:44px;font-weight:700;color:#0089cf;line-height:1">62,268</div>
+      <div style="font-size:17px;color:#333333;margin-top:6px">cells (segmented)</div>
+    </div>
+    <div class="tile" style="border:1px solid #dedede;padding:16px 18px;animation-delay:.25s">
+      <div style="font-size:44px;font-weight:700;color:#0089cf;line-height:1">347</div>
+      <div style="font-size:17px;color:#333333;margin-top:6px">genes: 248 panel + 99 custom</div>
+    </div>
+    <div class="tile" style="border:1px solid #dedede;padding:16px 18px;animation-delay:.4s">
+      <div style="font-size:44px;font-weight:700;color:#0089cf;line-height:1">15.7 M</div>
+      <div style="font-size:17px;color:#333333;margin-top:6px">decoded molecules</div>
+    </div>
+    <div class="tile" style="border:1px solid #dedede;padding:16px 18px;animation-delay:.55s">
+      <div style="font-size:44px;font-weight:700;color:#0089cf;line-height:1">178</div>
+      <div style="font-size:17px;color:#333333;margin-top:6px">median transcripts per cell (65 genes)</div>
+    </div>
+  </div>
+  <div style="position:absolute;left:760px;top:430px;width:456px;display:flex;flex-direction:column;gap:10px;font-size:19px;line-height:1.35;color:#333333">
+    <div>TgCRND8 Alzheimer's disease mouse model, 17.9 months, FFPE section</div>
+    <div>Compare scRNA-seq: ~20,000 genes, thousands of reads per cell. Here: few genes, few counts, <b>but every cell has an address.</b></div>
+    <div style="color:#006ba1">Notice the orange band along the top edge: very few transcripts. We come back to it.</div>
+  </div>
+  <div style="position:absolute;left:64px;right:64px;bottom:0;height:48px;border-top:1px solid #dedede;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div style="font-size:12px;color:#737373">Data: 10x Genomics public dataset Xenium_V1_FFPE_TgCRND8_17_9_months (Practical 2). Numbers computed from cells.parquet, transcripts.parquet and the count matrix.</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:14px;color:#525252">
+      <a href="s04.dc.html" aria-label="Previous slide" style="text-decoration:none;padding:8px 10px">←</a>
+      <span>05 / 26</span>
+      <a href="s06.dc.html" aria-label="Next slide" style="text-decoration:none;padding:8px 10px">→</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Segmentation shapes the counts</title>
+<script src="./support.js"></script>
+<script src="./deck.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0089cf}a:hover{color:#006ba1}
+@keyframes expand{0%,15%{transform:scale(.38);opacity:.9}60%,100%{transform:scale(1);opacity:1}}
+.cellring{animation:expand 6s cubic-bezier(.2,0,.2,1) infinite alternate}
+@keyframes flash{0%,55%{background:#0089cf}75%,100%{background:#f04e26}}
+.stray{animation:flash 6s ease-in-out infinite alternate}
+</style>
+</helmet>
+<div style="width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#ffffff;font-family:'Barlow Semi Condensed',sans-serif;color:#000000">
+  <div style="position:absolute;left:64px;top:40px;right:64px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f04e26">Quality control · segmentation</div>
+      <h2 style="margin:0;font-size:38px;line-height:1.1;font-weight:700;letter-spacing:-0.01em">A cell's counts are only as good as its outline</h2>
+    </div>
+    <div style="position:absolute;right:0;top:-8px;display:flex;gap:4px">
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Data</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#0089cf;color:#ffffff">QC</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Filter</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Normalize</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Cluster</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Markers</span>
+    </div>
+  </div>
+  <div style="position:absolute;left:64px;top:150px;width:520px;height:420px;background:#f7f7f7;border:1px solid #dedede;overflow:hidden" aria-hidden="true">
+    <sc-for list="{{cells}}" as="c" hint-placeholder-count="7">
+      <div class="cellring" style="position:absolute;left:{{c.l}}px;top:{{c.t}}px;width:{{c.d}}px;height:{{c.d}}px;border-radius:50%;border:2px solid #333333;background:rgba(209,234,246,.55);box-sizing:border-box"></div>
+    </sc-for>
+    <sc-for list="{{cells}}" as="c" hint-placeholder-count="7">
+      <div style="position:absolute;left:{{c.nl}}px;top:{{c.nt}}px;width:36px;height:36px;border-radius:50%;background:#525252"></div>
+    </sc-for>
+    <sc-for list="{{mols}}" as="m" hint-placeholder-count="40">
+      <div style="position:absolute;left:{{m.x}}px;top:{{m.y}}px;width:7px;height:7px;border-radius:50%;background:{{m.col}}"></div>
+    </sc-for>
+    <div class="stray" style="position:absolute;left:250px;top:200px;width:10px;height:10px;border-radius:50%"></div>
+    <div class="stray" style="position:absolute;left:262px;top:214px;width:10px;height:10px;border-radius:50%"></div>
+  </div>
+  <div style="position:absolute;left:630px;top:150px;width:586px;display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;gap:16px;align-items:baseline">
+      <div style="font-size:56px;font-weight:700;color:#0089cf;line-height:1">29%</div>
+      <div style="font-size:19px;line-height:1.35;color:#333333">of gene molecules in our run lie inside a nucleus. The other 71% depend on how far each nucleus was expanded.</div>
+    </div>
+    <div style="font-size:20px;font-weight:700;margin-top:6px">Signs of segmentation trouble in your QC</div>
+    <div style="display:flex;flex-direction:column;gap:10px;font-size:19px;line-height:1.35;color:#333333">
+      <div><b>Very small or very large cell areas</b>: fragments, or merged cells</div>
+      <div><b>Unusual nucleus-to-cell area ratio</b>: a nucleus expanded into empty space, or two nuclei in one cell</div>
+      <div><b>Markers of two cell types in one cell</b>: molecules from a neighbour counted in the wrong cell</div>
+    </div>
+    <div style="background:#ebf6fb;padding:14px 18px;font-size:18px;line-height:1.4;color:#003e5d">Methods and fixes: <b>Cell segmentation lecture</b>.</div>
+  </div>
+  <div style="position:absolute;left:64px;right:64px;bottom:0;height:48px;border-top:1px solid #dedede;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div style="font-size:12px;color:#737373">29%: overlaps_nucleus column, qv ≥ 20, Practical 2 dataset. Misassigned molecules: Mitchel et al., Nat Genet 2026. Methods and fixes: Cell segmentation lecture.</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:14px;color:#525252">
+      <a href="s11.dc.html" aria-label="Previous slide" style="text-decoration:none;padding:8px 10px">←</a>
+      <span>12 / 26</span>
+      <a href="s13.dc.html" aria-label="Next slide" style="text-decoration:none;padding:8px 10px">→</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const centres = [[110, 110], [250, 80], [400, 120], [150, 270], [300, 250], [440, 300], [230, 380]];
+    const D = 150;
+    const cells = centres.map(([x, y]) => ({ l: x - D / 2, t: y - D / 2, d: D, nl: x - 18, nt: y - 18 }));
+    let s = 5;
+    const r = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+    const mols = [];
+    centres.forEach(([x, y], i) => {
+      const col = i % 2 ? '#f04e26' : '#0089cf';
+      for (let k = 0; k < 9; k++) {
+        const a = r() * 6.283, d = 10 + r() * 60;
+        mols.push({ x: x + Math.cos(a) * d - 3, y: y + Math.sin(a) * d - 3, col });
+      }
+    });
+    return { cells, mols };
+  }
+}
+</script>
+</body>
+</html>

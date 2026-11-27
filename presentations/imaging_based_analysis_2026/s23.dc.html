@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Clusters in space</title>
+<script src="./support.js"></script>
+<script src="./deck.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0089cf}a:hover{color:#006ba1}
+@keyframes slide{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:none}}
+.in{animation:slide .6s cubic-bezier(.2,0,.2,1) both}
+</style>
+</helmet>
+<div style="width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#ffffff;font-family:'Barlow Semi Condensed',sans-serif;color:#000000">
+  <div style="position:absolute;left:64px;top:40px;right:64px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f04e26">Reduce &amp; cluster</div>
+      <h2 style="margin:0;font-size:38px;line-height:1.1;font-weight:700;letter-spacing:-0.01em">Spatial bonus: clusters must make sense on the tissue</h2>
+    </div>
+    <div style="position:absolute;right:0;top:-8px;display:flex;gap:4px">
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Data</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">QC</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Filter</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Normalize</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#0089cf;color:#ffffff">Cluster</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Markers</span>
+    </div>
+  </div>
+  <div style="position:absolute;left:64px;top:140px;width:1152px;display:grid;grid-template-columns:420px 60px minmax(0,1fr);gap:16px;align-items:center">
+    <div class="in" style="display:flex;flex-direction:column;gap:6px;animation-delay:.1s">
+      <div style="font-size:21px;font-weight:700">Expression space (UMAP)</div>
+      <img src="figs/l2/umap_lognorm.png" alt="UMAP coloured by 23 clusters, numbered" style="width:420px;height:420px;object-fit:contain">
+    </div>
+    <div style="font-size:40px;color:#0089cf;text-align:center">→</div>
+    <div class="in" style="display:flex;flex-direction:column;gap:6px;animation-delay:.6s">
+      <div style="font-size:21px;font-weight:700">Tissue space</div>
+      <img src="figs/l2/clusters_map_lognorm.png" alt="The same 23 clusters on the tissue map: layers in cortex, hippocampus and white matter tracts" style="width:100%;height:420px;object-fit:contain">
+    </div>
+  </div>
+  <div style="position:absolute;left:64px;top:600px;width:1152px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;font-size:18px;line-height:1.35;color:#333333">
+    <div><b>Layers and regions</b> appear although no coordinates were used: expression alone recovers anatomy.</div>
+    <div><b>Salt-and-pepper</b> clusters spread everywhere are often glia, vessels or immune cells, or noise.</div>
+    <div><b>A cluster only at the edge</b> or in the bad band is a warning sign of a technical artefact.</div>
+  </div>
+  <div style="position:absolute;left:64px;right:64px;bottom:0;height:48px;border-top:1px solid #dedede;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div style="font-size:12px;color:#737373">Practical 2 dataset, library-size normalization, Leiden (23 clusters); same colours in both panels. Spatially aware clustering: Day 3 lecture.</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:14px;color:#525252">
+      <a href="s22.dc.html" aria-label="Previous slide" style="text-decoration:none;padding:8px 10px">←</a>
+      <span>23 / 26</span>
+      <a href="s24.dc.html" aria-label="Next slide" style="text-decoration:none;padding:8px 10px">→</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

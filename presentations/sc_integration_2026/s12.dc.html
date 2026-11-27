@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Leave-one-gene-out</title>
+<script src="./support.js"></script>
+<script src="./deck.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0089cf}a:hover{color:#006ba1}
+@keyframes bar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.bar{transform-origin:left center;animation:bar .8s cubic-bezier(.2,0,.2,1) both}
+.gene{transition:all .3s}
+</style>
+</helmet>
+<div style="width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#ffffff;font-family:'Barlow Semi Condensed',sans-serif;color:#000000">
+  <div style="position:absolute;left:64px;top:40px;right:64px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f04e26">SpaGE · does it work?</div>
+      <h2 style="margin:0;font-size:38px;line-height:1.1;font-weight:700;letter-spacing:-0.01em">Test on genes we know: hide one, predict it, compare</h2>
+    </div>
+    <div style="position:absolute;right:0;top:-8px;display:flex;gap:4px">
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Data</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#0089cf;color:#ffffff">SpaGE</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Tangram</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">cell2location</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Compare</span>
+    </div>
+  </div>
+  <div style="position:absolute;left:64px;top:140px;width:1152px;display:flex;gap:6px;align-items:center" aria-hidden="true">
+    <div style="font-size:16px;color:#525252;width:150px">measured genes:</div>
+    <sc-for list="{{genes}}" as="g" hint-placeholder-count="12">
+      <div class="gene" style="flex:1;height:34px;display:flex;align-items:center;justify-content:center;font-size:14px;background:{{g.bg}};color:{{g.col}};border:{{g.border}}">{{g.name}}</div>
+    </sc-for>
+  </div>
+  <div style="position:absolute;left:64px;top:186px;width:1152px;font-size:16px;color:#525252">One gene at a time is removed from the spatial data (dashed), predicted from the others, then compared with its real measurement.</div>
+  <div style="position:absolute;left:64px;top:226px;width:700px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 18px">
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <div style="font-size:20px;font-weight:700">Cux2 · measured</div>
+      <img src="figs/l5/meas_Cux2.png" alt="Measured Cux2 expression: high in upper cortical layers" style="width:100%;height:250px;object-fit:contain">
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <div style="font-size:20px;font-weight:700">Cux2 · predicted by SpaGE</div>
+      <img src="figs/l5/spage_loo_Cux2.png" alt="SpaGE-predicted Cux2 expression: the same upper-layer pattern, smoother" style="width:100%;height:250px;object-fit:contain">
+    </div>
+    <div style="grid-column:1 / span 2;font-size:18px;color:#333333">Same layer pattern, smoother. Spearman ρ across 37,068 cells: <b>0.57</b>.</div>
+    <div style="grid-column:1 / span 2;background:#ebf6fb;padding:12px 16px;font-size:17px;line-height:1.4;color:#003e5d"><b>Why only 0.57?</b> ρ compares cell by cell. Single MERFISH cells are sparse (55% have zero Cux2 counts), and SpaGE averages 50 neighbours, so values in single cells disagree. Average both over squares of about 145 µm (~29 cells) and ρ rises to <b>0.81</b>: the <b>spatial pattern</b> is reliable.</div>
+  </div>
+  <div style="position:absolute;left:810px;top:232px;width:406px;display:flex;flex-direction:column;gap:9px">
+    <div style="font-size:17px;color:#525252">Spearman ρ, measured vs predicted, 7 held-out genes</div>
+    <sc-for list="{{bars}}" as="b" hint-placeholder-count="7">
+      <div style="display:grid;grid-template-columns:70px minmax(0,1fr) 44px;gap:8px;align-items:center">
+        <div style="font-size:17px">{{b.g}}</div>
+        <div style="height:20px;background:#f7f7f7"><div class="bar" style="height:20px;width:{{b.w}}%;background:#0089cf;animation-delay:{{b.t}}s"></div></div>
+        <div style="font-size:17px;font-weight:600;text-align:right">{{b.v}}</div>
+      </div>
+    </sc-for>
+    <div style="font-size:15px;color:#525252">axis 0 to 1</div>
+  </div>
+  <div style="position:absolute;left:64px;right:64px;bottom:0;height:48px;border-top:1px solid #dedede;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div style="font-size:12px;color:#737373">Practical 5: predicted_GE_loocv_SpaGE.csv (precomputed, n_pv=30). Square averages computed here (squares with ≥ 5 cells). Maps: log-normalized, 99th-percentile clip.</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:14px;color:#525252">
+      <a href="s11.dc.html" aria-label="Previous slide" style="text-decoration:none;padding:8px 10px">←</a>
+      <span>12 / 24</span>
+      <a href="s13.dc.html" aria-label="Next slide" style="text-decoration:none;padding:8px 10px">→</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  componentDidMount() { this.t = setInterval(() => this.setState({ h: (((this.state && this.state.h) || 0) + 1) % 12 }), 900); }
+  componentWillUnmount() { clearInterval(this.t); }
+  renderVals() {
+    const h = (this.state && this.state.h != null) ? this.state.h : 3;
+    const names = ['Satb2', 'Penk', 'Fezf2', 'Cux2', 'Dlx6', 'Zic1', 'Bcl11b', 'Gad2', 'Mog', 'Slc17a7', 'Gfap', 'Pvalb'];
+    const genes = names.map((name, i) => i === h
+      ? { name, bg: '#fef1ee', col: '#bb3d1e', border: '2px dashed #f04e26' }
+      : { name, bg: '#d1eaf6', col: '#003e5d', border: '2px solid #d1eaf6' });
+    const vals = [['Cux2', 0.5651], ['Satb2', 0.5617], ['Zic1', 0.5527], ['Bcl11b', 0.4626], ['Penk', 0.4500], ['Fezf2', 0.4213], ['Dlx6', 0.3975]];
+    const bars = vals.map(([g, v], i) => ({ g, v: v.toFixed(2), w: (v * 100).toFixed(1), t: (0.1 + i * 0.1).toFixed(2) }));
+    return { genes, bars };
+  }
+}
+</script>
+</body>
+</html>

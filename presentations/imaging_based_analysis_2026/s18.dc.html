@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Library-size normalization</title>
+<script src="./support.js"></script>
+<script src="./deck.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0089cf}a:hover{color:#006ba1}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.in{animation:rise .5s cubic-bezier(.2,0,.2,1) both}
+code{font-family:inherit;font-weight:600;color:#006ba1}
+td,th{padding:6px 10px;text-align:right;border-bottom:1px solid #dedede}
+th{font-weight:600;color:#525252;font-size:15px}
+</style>
+</helmet>
+<div style="width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#ffffff;font-family:'Barlow Semi Condensed',sans-serif;color:#000000">
+  <div style="position:absolute;left:64px;top:40px;right:64px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f04e26">Normalization · option 1</div>
+      <h2 style="margin:0;font-size:38px;line-height:1.1;font-weight:700;letter-spacing:-0.01em">Library size + log: the scRNA-seq default</h2>
+    </div>
+    <div style="position:absolute;right:0;top:-8px;display:flex;gap:4px">
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Data</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">QC</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Filter</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#0089cf;color:#ffffff">Normalize</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Cluster</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Markers</span>
+    </div>
+  </div>
+  <div style="position:absolute;left:64px;top:146px;width:540px;display:flex;flex-direction:column;gap:12px">
+    <div style="font-size:30px;text-align:center;padding:14px 0;background:#f7f7f7">value = log( 1 + <span style="color:#006ba1">count</span> / <span style="color:#bb3d1e">cell total</span> × 10,000 )</div>
+    <div style="font-size:18px;line-height:1.4;color:#333333">Divide by the total (removes capture), scale to a common size, then <b>log</b> so a few very high genes do not dominate.</div>
+    <div style="font-size:18px;font-weight:600;color:#006ba1;margin-top:4px">Toy cell, 4-gene panel, total = 40</div>
+    <table style="border-collapse:collapse;font-size:19px">
+      <tr><th style="text-align:left">gene</th><th>count</th><th>÷ 40 × 10,000</th><th>log(1 + ·)</th></tr>
+      <tr><td style="text-align:left">Slc17a7</td><td>30</td><td>7,500</td><td><b>8.92</b></td></tr>
+      <tr><td style="text-align:left">Gad1</td><td>6</td><td>1,500</td><td><b>7.31</b></td></tr>
+      <tr><td style="text-align:left">Gfap</td><td>4</td><td>1,000</td><td><b>6.91</b></td></tr>
+      <tr><td style="text-align:left">Mobp</td><td>0</td><td>0</td><td><b>0</b></td></tr>
+    </table>
+  </div>
+  <div style="position:absolute;left:650px;top:146px;width:566px;display:flex;flex-direction:column;gap:12px">
+    <div style="font-size:22px;font-weight:700">The catch: the "total" depends on the panel</div>
+    <div style="font-size:18px;line-height:1.4;color:#333333">In scRNA-seq the total measures sequencing depth. On a panel it measures <b>how many of this cell's genes were chosen</b>.</div>
+    <div class="in" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;animation-delay:.3s">
+      <div style="border:1px solid #dedede;padding:12px 14px">
+        <div style="font-size:18px;font-weight:600">Neuron</div>
+        <div style="font-size:16px;color:#525252">panel full of neuron genes</div>
+        <div style="font-size:17px;margin-top:6px">total = <b>160</b></div>
+        <div style="font-size:17px">gene X = 10 → <b style="color:#006ba1">625</b></div>
+      </div>
+      <div style="border:1px solid #dedede;padding:12px 14px">
+        <div style="font-size:18px;font-weight:600">Glial cell</div>
+        <div style="font-size:16px;color:#525252">few of its genes on the panel</div>
+        <div style="font-size:17px;margin-top:6px">total = <b>40</b></div>
+        <div style="font-size:17px">gene X = 10 → <b style="color:#bb3d1e">2,500</b></div>
+      </div>
+    </div>
+    <div class="in" style="background:#fef1ee;padding:14px 18px;font-size:18px;line-height:1.4;color:#6c2311;animation-delay:.6s">Same 10 molecules, but after normalization they look <b>4× higher in glia</b>.</div>
+  </div>
+  <div style="position:absolute;left:64px;right:64px;bottom:0;height:48px;border-top:1px solid #dedede;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div style="font-size:12px;color:#737373">Atta et al., Genome Biol 2024; Bhuva et al., Genome Biol 2024. Toy numbers for intuition. Practical 2: target_sum=1e4.</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:14px;color:#525252">
+      <a href="s17.dc.html" aria-label="Previous slide" style="text-decoration:none;padding:8px 10px">←</a>
+      <span>18 / 26</span>
+      <a href="s19.dc.html" aria-label="Next slide" style="text-decoration:none;padding:8px 10px">→</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

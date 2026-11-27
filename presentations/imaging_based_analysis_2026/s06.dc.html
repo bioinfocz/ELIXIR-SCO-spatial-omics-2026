@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Zooming in</title>
+<script src="./support.js"></script>
+<script src="./deck.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0089cf}a:hover{color:#006ba1}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.step{animation:fade .7s cubic-bezier(.2,0,.2,1) both}
+</style>
+</helmet>
+<div style="width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#ffffff;font-family:'Barlow Semi Condensed',sans-serif;color:#000000">
+  <div style="position:absolute;left:64px;top:40px;right:64px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f04e26">The data</div>
+      <h2 style="margin:0;font-size:38px;line-height:1.1;font-weight:700;letter-spacing:-0.01em">Zooming in: from molecules to cells</h2>
+    </div>
+    <div style="position:absolute;right:0;top:-8px;display:flex;gap:4px">
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#0089cf;color:#ffffff">Data</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">QC</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Filter</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Normalize</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Cluster</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Markers</span>
+    </div>
+  </div>
+  <div style="position:absolute;left:64px;top:146px;width:1152px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px">
+    <div class="step" style="display:flex;flex-direction:column;gap:10px;animation-delay:.2s">
+      <img src="figs/l2/crop_step0.png" alt="All decoded molecules in a 150 by 150 micrometre window, grey dots" style="width:100%;height:300px;object-fit:contain;border:1px solid #dedede">
+      <div style="font-size:20px;font-weight:600">1 · Every dot is one molecule</div>
+      <div style="font-size:17px;line-height:1.35;color:#525252">All decoded gene transcripts in the window. Nuclei already show up as denser clumps.</div>
+    </div>
+    <div class="step" style="display:flex;flex-direction:column;gap:10px;animation-delay:1.6s">
+      <img src="figs/l2/crop_step1.png" alt="The same window showing four genes in different colours" style="width:100%;height:300px;object-fit:contain;border:1px solid #dedede">
+      <div style="font-size:20px;font-weight:600">2 · Each dot has a gene</div>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 12px;font-size:15px;color:#333333;white-space:nowrap">
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#0089cf"></span>Slc17a7 (neurons)</span>
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#f04e26"></span>Mobp (oligodendrocytes)</span>
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#003e5d"></span>Gad1</span>
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#73bee5"></span>Gfap</span>
+      </div>
+    </div>
+    <div class="step" style="display:flex;flex-direction:column;gap:10px;animation-delay:3s">
+      <img src="figs/l2/crop_step2.png" alt="The same window with nucleus outlines in grey and cell outlines in black" style="width:100%;height:300px;object-fit:contain;border:1px solid #dedede">
+      <div style="font-size:20px;font-weight:600">3 · Segmentation draws cells</div>
+      <div style="font-size:17px;line-height:1.35;color:#525252">Nuclei (grey) are found on the DAPI image and expanded into cells (black). Molecules inside a polygon are counted for that cell.</div>
+    </div>
+  </div>
+  <div style="position:absolute;left:64px;top:624px;width:1152px;font-size:19px;color:#333333">One window = 150 × 150 µm of cortex. Only <b>29%</b> of the gene molecules lie inside a nucleus; the rest are assigned by the expansion.</div>
+  <div style="position:absolute;left:64px;right:64px;bottom:0;height:48px;border-top:1px solid #dedede;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div style="font-size:12px;color:#737373">Data: Practical 2 Xenium section, window x 4800-4950 µm, y 900-1050 µm; transcripts.parquet, cell_ and nucleus_boundaries.parquet (overlaps_nucleus column).</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:14px;color:#525252">
+      <a href="s05.dc.html" aria-label="Previous slide" style="text-decoration:none;padding:8px 10px">←</a>
+      <span>06 / 26</span>
+      <a href="s07.dc.html" aria-label="Next slide" style="text-decoration:none;padding:8px 10px">→</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

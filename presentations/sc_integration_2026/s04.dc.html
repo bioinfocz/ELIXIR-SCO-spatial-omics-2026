@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Three method families</title>
+<script src="./support.js"></script>
+<script src="./deck.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0089cf}a:hover{color:#006ba1}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.in{animation:rise .5s cubic-bezier(.2,0,.2,1) both}
+@keyframes merge{0%,25%{transform:translate(var(--mx),0)}70%,100%{transform:translate(0,0)}}
+.mg{animation:merge 4s cubic-bezier(.2,0,.2,1) infinite alternate}
+@keyframes glow{0%,100%{opacity:.25}50%{opacity:1}}
+.cellm{animation:glow 3s ease-in-out infinite}
+</style>
+</helmet>
+<div style="width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#ffffff;font-family:'Barlow Semi Condensed',sans-serif;color:#000000">
+  <div style="position:absolute;left:64px;top:40px;right:64px;display:flex;flex-direction:column;gap:6px">
+    <div style="font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f04e26">The methods</div>
+    <h2 style="margin:0;font-size:38px;line-height:1.1;font-weight:700;letter-spacing:-0.01em">Three families of methods, one from each in the practical</h2>
+  </div>
+  <div style="position:absolute;left:64px;top:146px;width:1152px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px">
+    <div class="in" style="display:flex;flex-direction:column;gap:10px;animation-delay:.1s">
+      <div style="height:160px;background:#f7f7f7;border:1px solid #dedede;position:relative;overflow:hidden" aria-hidden="true">
+        <sc-for list="{{cloudA}}" as="p" hint-placeholder-count="14"><div class="mg" style="position:absolute;left:{{p.x}}px;top:{{p.y}}px;width:12px;height:12px;border-radius:50%;background:#f04e26;--mx:-70px"></div></sc-for>
+        <sc-for list="{{cloudB}}" as="p" hint-placeholder-count="14"><div class="mg" style="position:absolute;left:{{p.x}}px;top:{{p.y}}px;width:12px;height:12px;border-radius:50%;background:#0089cf;--mx:70px"></div></sc-for>
+      </div>
+      <div style="font-size:24px;font-weight:700">Joint embedding</div>
+      <div style="font-size:18px;line-height:1.35;color:#333333">Put both datasets in one shared space, then copy from the nearest neighbours.</div>
+      <div style="font-size:16px;color:#525252">SpaGE, Seurat, LIGER, gimVI</div>
+      <div style="font-size:17px;font-weight:600;color:#006ba1">Practical: SpaGE</div>
+    </div>
+    <div class="in" style="display:flex;flex-direction:column;gap:10px;animation-delay:.4s">
+      <div style="height:160px;background:#f7f7f7;border:1px solid #dedede;display:flex;align-items:center;justify-content:center" aria-hidden="true">
+        <div style="display:grid;grid-template-columns:repeat(8,18px);gap:3px">
+          <sc-for list="{{matrix}}" as="m" hint-placeholder-count="40"><div class="cellm" style="width:18px;height:18px;background:#f04e26;opacity:{{m.o}};animation-delay:{{m.t}}s"></div></sc-for>
+        </div>
+      </div>
+      <div style="font-size:24px;font-weight:700">Probabilistic mapping</div>
+      <div style="font-size:18px;line-height:1.35;color:#333333">Learn a table M: one row per reference cell, one column per location. Each row is a set of probabilities that sum to 1: where this cell most likely sits.</div>
+      <div style="font-size:16px;color:#525252">Tangram, novoSpaRc, SpaOTsc</div>
+      <div style="font-size:17px;font-weight:600;color:#006ba1">Practical: Tangram</div>
+    </div>
+    <div class="in" style="display:flex;flex-direction:column;gap:10px;animation-delay:.7s">
+      <div style="height:160px;background:#f7f7f7;border:1px solid #dedede;display:flex;align-items:center;justify-content:center;gap:10px;font-size:20px" aria-hidden="true">
+        <div style="display:flex;flex-direction:column;gap:4px"><div style="width:60px;height:14px;background:#0089cf"></div><div style="width:34px;height:14px;background:#f04e26"></div><div style="width:18px;height:14px;background:#003e5d"></div></div>
+        <div>×</div>
+        <div style="display:flex;flex-direction:column;gap:2px;font-size:15px;color:#525252"><div>signatures</div><div>from scRNA-seq</div></div>
+        <div>→</div>
+        <div style="font-size:18px;font-weight:600">counts</div>
+      </div>
+      <div style="font-size:24px;font-weight:700">Probabilistic modelling</div>
+      <div style="font-size:18px;line-height:1.35;color:#333333">Assume the counts at a location = number of cells of each type × that type's average profile (signature), plus noise. Fit the numbers that explain the counts best.</div>
+      <div style="font-size:16px;color:#525252">cell2location, RCTD, stereoscope, CARD</div>
+      <div style="font-size:17px;font-weight:600;color:#006ba1">Practical: cell2location</div>
+    </div>
+  </div>
+  <div class="in" style="position:absolute;left:64px;top:560px;width:1152px;font-size:19px;line-height:1.4;color:#333333;animation-delay:1s">Families overlap in use: an embedding or a mapping can also impute genes and transfer labels; a model can be read as a map of cell types.</div>
+  <div style="position:absolute;left:64px;right:64px;bottom:0;height:48px;border-top:1px solid #dedede;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div style="font-size:12px;color:#737373">Classification and method lists from A. Mahfouz's lecture. Abdelaal et al., NAR 2020; Biancalani et al., Nat Methods 2021; Kleshchevnikov et al., Nat Biotechnol 2022.</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:14px;color:#525252">
+      <a href="s03.dc.html" aria-label="Previous slide" style="text-decoration:none;padding:8px 10px">←</a>
+      <span>04 / 24</span>
+      <a href="s05.dc.html" aria-label="Next slide" style="text-decoration:none;padding:8px 10px">→</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    let s = 9;
+    const r = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+    const cloudA = [], cloudB = [];
+    for (let i = 0; i < 14; i++) { cloudA.push({ x: 120 + r() * 100, y: 30 + r() * 100 }); cloudB.push({ x: 120 + r() * 100, y: 30 + r() * 100 }); }
+    const matrix = [];
+    for (let i = 0; i < 40; i++) matrix.push({ o: (0.1 + r() * 0.9).toFixed(2), t: (r() * 3).toFixed(2) });
+    return { cloudA, cloudB, matrix };
+  }
+}
+</script>
+</body>
+</html>

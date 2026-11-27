@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Recap: what Practical 2 loads</title>
+<script src="./support.js"></script>
+<script src="./deck.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0089cf}a:hover{color:#006ba1}
+@keyframes rise{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+.in{animation:rise .5s cubic-bezier(.2,0,.2,1) both}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.arrow{transform-origin:left center;animation:grow .6s cubic-bezier(.2,0,.2,1) both}
+code{font-family:inherit;font-weight:600}
+</style>
+</helmet>
+<div style="width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#ffffff;font-family:'Barlow Semi Condensed',sans-serif;color:#000000">
+  <div style="position:absolute;left:64px;top:40px;right:64px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f04e26">The data · recap</div>
+      <h2 style="margin:0;font-size:38px;line-height:1.1;font-weight:700;letter-spacing:-0.01em">Recap from Data formats: what Practical 2 loads</h2>
+    </div>
+    <div style="position:absolute;right:0;top:-8px;display:flex;gap:4px">
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#0089cf;color:#ffffff">Data</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">QC</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Filter</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Normalize</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Cluster</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Markers</span>
+    </div>
+  </div>
+  <div class="in" style="position:absolute;left:64px;top:156px;width:360px;background:#f7f7f7;padding:18px 20px;box-sizing:border-box;display:flex;flex-direction:column;gap:8px;animation-delay:.1s">
+    <div style="font-size:15px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#525252">Seen in Data formats</div>
+    <div style="font-size:18px;line-height:1.5;color:#333333">Xenium output files<br>(molecules, cells, outlines, counts, images)<br>→ SpatialData → its <b>table</b></div>
+    <div style="font-size:16px;color:#525252">Practical 0 and the Data formats lecture cover these in detail.</div>
+  </div>
+  <div style="position:absolute;left:440px;top:300px;width:90px">
+    <div class="arrow" style="width:84px;height:3px;background:#0089cf;animation-delay:.4s"></div>
+  </div>
+  <div class="in" style="position:absolute;left:548px;top:150px;width:330px;animation-delay:.6s">
+    <div style="font-size:22px;font-weight:700">AnnData</div>
+    <div style="position:relative;margin-top:12px;height:300px">
+      <div style="position:absolute;left:70px;top:0;width:250px;height:44px;background:#d1eaf6;display:flex;align-items:center;justify-content:center;font-size:15px">var: genes (347)</div>
+      <div style="position:absolute;left:0;top:52px;width:62px;height:180px;background:#fcdfd8;display:flex;align-items:center;justify-content:center;font-size:15px;writing-mode:vertical-rl;transform:rotate(180deg)">obs: cells (62,268)</div>
+      <div style="position:absolute;left:70px;top:52px;width:250px;height:180px;background:#0089cf;color:#ffffff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:18px;font-weight:600">X<span style="font-weight:400;font-size:15px">counts, cells × genes</span></div>
+      <div style="position:absolute;left:0;top:240px;width:320px;height:44px;border:2px dashed #f04e26;display:flex;align-items:center;justify-content:center;font-size:16px;box-sizing:border-box"><b>obsm['spatial']</b>&#160;: x, y of each cell</div>
+    </div>
+  </div>
+  <div class="in" style="position:absolute;left:920px;top:156px;width:296px;display:flex;flex-direction:column;gap:14px;animation-delay:.9s">
+    <div style="font-size:20px;font-weight:700">What we use today</div>
+    <div style="font-size:18px;line-height:1.4;color:#333333"><b>X</b>: raw counts per cell and gene</div>
+    <div style="font-size:18px;line-height:1.4;color:#333333"><b>obs</b>: the QC columns, e.g. transcript_counts, cell_area, nucleus_area, control_probe_counts</div>
+    <div style="font-size:18px;line-height:1.4;color:#333333"><b>obsm['spatial']</b>: to put every metric on the tissue map</div>
+  </div>
+  <div style="position:absolute;left:64px;top:620px;width:1152px;font-size:18px;color:#333333">Keep in mind: the count table is already a <b>summary</b>. It depends on decoding (qv ≥ 20, next slides) and on segmentation.</div>
+  <div style="position:absolute;left:64px;right:64px;bottom:0;height:48px;border-top:1px solid #dedede;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div style="font-size:12px;color:#737373">Column names and sizes from the Practical 2 AnnData (Xenium Onboard Analysis 1.4). Files and SpatialData: Data formats lecture and Practical 0.</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:14px;color:#525252">
+      <a href="s03.dc.html" aria-label="Previous slide" style="text-decoration:none;padding:8px 10px">←</a>
+      <span>04 / 26</span>
+      <a href="s05.dc.html" aria-label="Next slide" style="text-decoration:none;padding:8px 10px">→</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

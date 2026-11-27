@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lecture 2 title</title>
+<script src="./support.js"></script>
+<script src="./deck.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0089cf}a:hover{color:#006ba1}
+@keyframes pop{0%{opacity:0;transform:scale(.2)}60%{opacity:1;transform:scale(1.25)}100%{opacity:1;transform:scale(1)}}
+@keyframes jitter{0%,100%{translate:0 0}25%{translate:1.5px -1px}50%{translate:-1px 1.5px}75%{translate:1px 1px}}
+@keyframes sway{0%,100%{transform:rotate(0deg) scale(1)}30%{transform:rotate(-7deg) scale(1.02)}70%{transform:rotate(7deg) scale(.98)}}
+.sway{transform-origin:50% 52%;animation:sway 14s ease-in-out infinite}
+.dot{animation:pop .5s cubic-bezier(.2,0,.2,1) both, jitter 2.6s ease-in-out infinite}
+</style>
+</helmet>
+<div style="width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#ffffff;font-family:'Barlow Semi Condensed',sans-serif;color:#000000">
+  <div style="position:absolute;left:0;top:0;width:12px;height:720px;background:#0089cf"></div>
+  <div style="position:absolute;left:80px;top:84px;width:680px;display:flex;flex-direction:column;gap:20px">
+    <div style="font-size:16px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f04e26">Lecture 2 · Spatial Omics Data Analysis 2026</div>
+    <h1 style="margin:0;font-size:56px;line-height:1.05;font-weight:700;letter-spacing:-0.01em">Imaging-based spatial data</h1>
+    <div style="font-size:30px;line-height:1.2;color:#333333">From raw molecules to clusters: quality control, filtering, normalization and clustering</div>
+    <div style="height:1px;background:#dedede;margin:12px 0 4px"></div>
+    <div style="display:flex;flex-direction:column;gap:6px;font-size:20px;color:#333333">
+      <div><span style="font-weight:600">Vojtěch Melichar</span> · IMG, CZ</div>
+      <div>Day 2 · 15 December 2026 · IMG Prague</div>
+    </div>
+    <div style="font-size:15px;line-height:1.45;color:#525252;margin-top:8px">Adapted from the lecture by Christophe Avenel (NBIS, SE), ELIXIR-SCO Spatial Omics course, Uppsala 2026. Hands-on part: Practical 2.</div>
+  </div>
+  <div style="position:absolute;left:80px;bottom:44px;display:flex;align-items:center;gap:48px">
+    <img src="figs/logos/imglogo-basic-color-nobg-rgb.png" alt="IMG logo" style="height:46px;width:auto">
+    <img src="figs/logos/elixir-logo.png" alt="ELIXIR logo" style="height:66px;width:auto">
+  </div>
+  <div class="sway" style="position:absolute;left:800px;top:80px;width:440px;height:560px" aria-hidden="true">
+    <sc-for list="{{dots}}" as="d" hint-placeholder-count="40">
+      <div class="dot" style="position:absolute;left:{{d.x}}px;top:{{d.y}}px;width:{{d.r}}px;height:{{d.r}}px;border-radius:50%;background:{{d.c}};animation-delay:{{d.t}}s, {{d.j}}s;animation-duration:.5s, {{d.jd}}s"></div>
+    </sc-for>
+  </div>
+  <a href="s02.dc.html" style="position:absolute;right:48px;bottom:28px;font-size:16px;text-decoration:none;color:#006ba1;padding:10px 14px">Start →</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // deterministic pseudo-random "cells" inside a hemisphere-like outline
+    let s = 7;
+    const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+    const cols = ['#0089cf', '#73bee5', '#d1eaf6', '#f04e26', '#003e5d', '#c7c7c7'];
+    const dots = [];
+    while (dots.length < 340) {
+      const x = rnd(), y = rnd();
+      const dx = (x - 0.5) / 0.5, dy = (y - 0.52) / 0.46;
+      if (dx * dx + dy * dy > 1 || (dy < -0.55 && Math.abs(dx) < 0.18)) continue;
+      const layer = Math.floor((dx * dx + dy * dy) * 6);
+      const c = rnd() < 0.08 ? cols[3] : cols[[0, 1, 4, 1, 2, 5][layer % 6]];
+      dots.push({ x: Math.round(x * 420), y: Math.round(y * 540), r: 8 + Math.round(rnd() * 8), c,
+        t: (0.2 + dots.length * 0.006).toFixed(3), j: (2.5 + rnd() * 2.5).toFixed(2), jd: (1.8 + rnd() * 1.6).toFixed(2) });
+    }
+    return { dots };
+  }
+}
+</script>
+</body>
+</html>

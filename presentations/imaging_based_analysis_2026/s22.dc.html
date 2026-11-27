@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>From table to clusters</title>
+<script src="./support.js"></script>
+<script src="./deck.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0089cf}a:hover{color:#006ba1}
+code{font-family:inherit;font-weight:600;color:#006ba1}
+.stage{transition:opacity .4s, transform .4s}
+</style>
+</helmet>
+<div style="width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#ffffff;font-family:'Barlow Semi Condensed',sans-serif;color:#000000">
+  <div style="position:absolute;left:64px;top:40px;right:64px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f04e26">Reduce &amp; cluster</div>
+      <h2 style="margin:0;font-size:38px;line-height:1.1;font-weight:700;letter-spacing:-0.01em">From table to clusters, in four steps</h2>
+    </div>
+    <div style="position:absolute;right:0;top:-8px;display:flex;gap:4px">
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Data</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">QC</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Filter</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Normalize</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#0089cf;color:#ffffff">Cluster</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Markers</span>
+    </div>
+  </div>
+  <div style="position:absolute;left:64px;top:150px;width:1152px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px">
+    <div class="stage" style="display:flex;flex-direction:column;gap:8px;opacity:{{o0}}">
+      <div style="font-size:15px;font-weight:600;color:#525252">INPUT</div>
+      <div style="height:200px;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:2px">
+        <sc-for list="{{cellsGrid}}" as="g" hint-placeholder-count="64"><div style="background:{{g}}"></div></sc-for>
+      </div>
+      <div style="font-size:20px;font-weight:700">Normalized table</div>
+      <div style="font-size:16px;line-height:1.35;color:#333333">56,899 cells × 347 genes</div>
+    </div>
+    <div class="stage" style="display:flex;flex-direction:column;gap:8px;opacity:{{o1}}">
+      <div style="font-size:15px;font-weight:600;color:#525252">STEP 1</div>
+      <img src="figs/l2/pca_lognorm.png" alt="Cells plotted on the first two principal components" style="width:100%;height:200px;object-fit:contain">
+      <div style="font-size:20px;font-weight:700">PCA</div>
+      <div style="font-size:16px;line-height:1.35;color:#333333">347 genes → 50 main directions.</div>
+      <code style="font-size:15px">sc.pp.pca</code>
+    </div>
+    <div class="stage" style="display:flex;flex-direction:column;gap:8px;opacity:{{o2}}">
+      <div style="font-size:15px;font-weight:600;color:#525252">STEP 2</div>
+      <svg viewBox="0 0 200 200" style="width:100%;height:200px" role="img" aria-label="Toy graph: each cell linked to its most similar cells">
+        <sc-for list="{{edges}}" as="e" hint-placeholder-count="16"><line x1="{{e.x1}}" y1="{{e.y1}}" x2="{{e.x2}}" y2="{{e.y2}}" stroke="#9e9e9e" stroke-width="2"></line></sc-for>
+        <sc-for list="{{nodes}}" as="n" hint-placeholder-count="12"><circle cx="{{n.x}}" cy="{{n.y}}" r="9" fill="{{n.c0}}"></circle></sc-for>
+      </svg>
+      <div style="font-size:20px;font-weight:700">Neighbour graph</div>
+      <div style="font-size:16px;line-height:1.35;color:#333333">Link each cell to its 15 most similar cells</div>
+      <code style="font-size:15px">sc.pp.neighbors</code>
+    </div>
+    <div class="stage" style="display:flex;flex-direction:column;gap:8px;opacity:{{o3}}">
+      <div style="font-size:15px;font-weight:600;color:#525252">STEP 3</div>
+      <svg viewBox="0 0 200 200" style="width:100%;height:200px" role="img" aria-label="The same toy graph split into two communities, blue and orange">
+        <sc-for list="{{edges}}" as="e" hint-placeholder-count="16"><line x1="{{e.x1}}" y1="{{e.y1}}" x2="{{e.x2}}" y2="{{e.y2}}" stroke="{{e.col}}" stroke-width="2"></line></sc-for>
+        <sc-for list="{{nodes}}" as="n" hint-placeholder-count="12"><circle cx="{{n.x}}" cy="{{n.y}}" r="9" fill="{{n.c}}"></circle></sc-for>
+      </svg>
+      <div style="font-size:20px;font-weight:700">Leiden</div>
+      <div style="font-size:16px;line-height:1.35;color:#333333">Find groups with many links inside, few between. Groups are always connected.</div>
+      <code style="font-size:15px">sc.tl.leiden</code>
+    </div>
+    <div class="stage" style="display:flex;flex-direction:column;gap:8px;opacity:{{o4}}">
+      <div style="font-size:15px;font-weight:600;color:#525252">STEP 4</div>
+      <img src="figs/l2/umap_lognorm.png" alt="UMAP of all cells coloured by 23 clusters" style="width:100%;height:200px;object-fit:contain">
+      <div style="font-size:20px;font-weight:700">UMAP</div>
+      <div style="font-size:16px;line-height:1.35;color:#333333">A 2D picture of the graph, <b>for viewing only</b>.</div>
+      <code style="font-size:15px">sc.tl.umap</code>
+    </div>
+  </div>
+  <div style="position:absolute;left:64px;top:560px;width:1152px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px">
+    <div style="background:#ebf6fb;padding:14px 18px;font-size:18px;line-height:1.4;color:#003e5d">Small panel: skip highly variable gene selection. The 347 genes were already chosen to be informative.</div>
+    <div style="background:#f7f7f7;padding:14px 18px;font-size:18px;line-height:1.4;color:#333333">Unsupervised: no labels go in. Clusters are a hypothesis until markers and the tissue map support them.</div>
+  </div>
+  <div style="position:absolute;left:64px;right:64px;bottom:0;height:48px;border-top:1px solid #dedede;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div style="font-size:12px;color:#737373">PCA and UMAP: Practical 2 dataset, library-size normalized. Leiden guarantees connected communities: Traag, Waltman &amp; van Eck, Sci Rep 2019. Graph panels: toy example.</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:14px;color:#525252">
+      <a href="s21.dc.html" aria-label="Previous slide" style="text-decoration:none;padding:8px 10px">←</a>
+      <span>22 / 26</span>
+      <a href="s23.dc.html" aria-label="Next slide" style="text-decoration:none;padding:8px 10px">→</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  componentDidMount() { this.t = setInterval(() => this.setState({ s: (((this.state && this.state.s) || 0) + 1) % 7 }), 1300); }
+  componentWillUnmount() { clearInterval(this.t); }
+  renderVals() {
+    const s = (this.state && this.state.s != null) ? this.state.s : 6;
+    const op = (i) => (s >= i ? 1 : 0.15);
+    const pts = [[40, 50, 0], [70, 30, 0], [90, 70, 0], [50, 95, 0], [25, 80, 0], [80, 110, 0],
+                 [130, 100, 1], [160, 80, 1], [175, 125, 1], [140, 150, 1], [110, 140, 1], [170, 165, 1]];
+    const nodes = pts.map(([x, y, g]) => ({ x, y, c0: '#525252', c: g ? '#f04e26' : '#0089cf' }));
+    const pairs = [[0, 1], [1, 2], [0, 4], [3, 4], [2, 3], [2, 5], [3, 5], [0, 2], [6, 7], [7, 8], [6, 10], [9, 10], [8, 9], [9, 11], [8, 11], [5, 10]];
+    const edges = pairs.map(([a, b]) => ({ x1: pts[a][0], y1: pts[a][1], x2: pts[b][0], y2: pts[b][1],
+      col: pts[a][2] === pts[b][2] ? (pts[a][2] ? '#f79e88' : '#73bee5') : '#dedede' }));
+    const shades = ['#ebf6fb', '#d1eaf6', '#73bee5', '#0089cf', '#ffffff', '#d1eaf6', '#ebf6fb', '#003e5d'];
+    const cellsGrid = Array.from({ length: 64 }, (_, i) => shades[(i * 7 + Math.floor(i / 8) * 3) % 8]);
+    return { o0: op(0), o1: op(1), o2: op(2), o3: op(3), o4: op(4), nodes, edges, cellsGrid };
+  }
+}
+</script>
+</body>
+</html>

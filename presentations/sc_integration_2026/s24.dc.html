@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Summary</title>
+<script src="./support.js"></script>
+<script src="./deck.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0089cf}a:hover{color:#006ba1}
+@keyframes tick{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
+.row{animation:tick .45s cubic-bezier(.2,0,.2,1) both}
+</style>
+</helmet>
+<div style="width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#ffffff;font-family:'Barlow Semi Condensed',sans-serif;color:#000000">
+  <div style="position:absolute;left:0;top:0;width:12px;height:720px;background:#0089cf"></div>
+  <div style="position:absolute;left:64px;top:40px;right:64px;display:flex;flex-direction:column;gap:6px">
+    <div style="font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f04e26">Summary</div>
+    <h2 style="margin:0;font-size:38px;line-height:1.1;font-weight:700;letter-spacing:-0.01em">Which tool for which question?</h2>
+  </div>
+  <div style="position:absolute;left:64px;top:140px;width:780px;display:flex;flex-direction:column">
+    <div style="display:grid;grid-template-columns:260px 170px minmax(0,1fr);gap:12px;padding:8px 0;border-bottom:2px solid #333333;font-size:16px;font-weight:600;color:#525252">
+      <div>Your question</div><div>Tool in Practical 5</div><div>Remember</div>
+    </div>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+      <div class="row" style="display:grid;grid-template-columns:260px 170px minmax(0,1fr);gap:12px;padding:12px 0;border-bottom:1px solid #dedede;font-size:19px;line-height:1.35;align-items:start;animation-delay:{{r.t}}s">
+        <div style="font-weight:600">{{r.q}}</div>
+        <div style="color:#006ba1;font-weight:600">{{r.tool}}</div>
+        <div style="color:#333333">{{r.note}}</div>
+      </div>
+    </sc-for>
+    <div style="font-size:18px;line-height:1.4;color:#333333;margin-top:16px">Always: a matched reference, enough shared genes, the right input scale, and a check on held-out or independent data.</div>
+  </div>
+  <div style="position:absolute;left:890px;top:150px;width:326px;display:flex;flex-direction:column;gap:16px">
+    <div style="background:#0089cf;color:#ffffff;padding:22px 24px;display:flex;flex-direction:column;gap:10px">
+      <div style="font-size:15px;font-weight:600;letter-spacing:.1em;text-transform:uppercase">Now: Practical 5</div>
+      <div style="font-size:24px;font-weight:700;line-height:1.2">Spatial and single-cell data integration</div>
+      <div style="font-size:18px;line-height:1.4">MERFISH section + Allen scRNA-seq reference. SpaGE, Tangram and cell2location on the same data.</div>
+    </div>
+    <div style="font-size:17px;line-height:1.45;color:#525252">Questions to keep in mind:<br>Which genes are predicted well, and which not? Does each predicted pattern match known anatomy?</div>
+  </div>
+  <div style="position:absolute;left:64px;right:64px;bottom:0;height:48px;border-top:1px solid #dedede;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div style="font-size:12px;color:#737373">Full reference list in the printed speaker notes. Lecture adapted from A. Mahfouz (LUMC, TU Delft).</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:14px;color:#525252">
+      <a href="s23.dc.html" aria-label="Previous slide" style="text-decoration:none;padding:8px 10px">←</a>
+      <span>24 / 24</span>
+      <a href="Main.dc.html" aria-label="Back to the title slide" style="text-decoration:none;padding:8px 10px">↺</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const raw = [
+      ['Which genes are expressed where, beyond my panel?', 'SpaGE, Tangram', 'Predictions, not measurements; validate on held-out genes.'],
+      ['Where do my dissociated cells come from?', 'Tangram', 'Single-cell mappings are noisy; sum over cell types.'],
+      ['Which cell types make up each spot?', 'cell2location', 'Needs raw counts and a reference with all cell types.'],
+      ['What should I call each spatial cell?', 'Tangram projections; foundation models', 'Compare with markers in the spatial data itself.'],
+    ];
+    const rows = raw.map(([q, tool, note], i) => ({ q, tool, note, t: (0.2 + i * 0.3).toFixed(2) }));
+    return { rows };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>kNN prediction</title>
+<script src="./support.js"></script>
+<script src="./deck.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0089cf}a:hover{color:#006ba1}
+input[type=range]{accent-color:#0089cf}
+td,th{padding:8px 12px;text-align:right;border-bottom:1px solid #dedede}
+th{font-weight:600;color:#525252;font-size:15px}
+</style>
+</helmet>
+<div style="width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#ffffff;font-family:'Barlow Semi Condensed',sans-serif;color:#000000">
+  <div style="position:absolute;left:64px;top:40px;right:64px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f04e26">SpaGE · toy example</div>
+      <h2 style="margin:0;font-size:38px;line-height:1.1;font-weight:700;letter-spacing:-0.01em">Predicting Tbr1 in one spatial cell</h2>
+    </div>
+    <div style="position:absolute;right:0;top:-8px;display:flex;gap:4px">
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Data</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#0089cf;color:#ffffff">SpaGE</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Tangram</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">cell2location</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Compare</span>
+    </div>
+  </div>
+  <div style="position:absolute;left:64px;top:146px;width:600px;display:flex;flex-direction:column;gap:12px">
+    <div style="font-size:19px;line-height:1.4;color:#333333">Tbr1 is not on the MERFISH panel. The 5 most similar reference cells (in the aligned space) have measured it:</div>
+    <table style="border-collapse:collapse;font-size:20px">
+      <tr><th style="text-align:left">reference cell</th><th>similarity</th><th>Tbr1</th><th>used?</th></tr>
+      <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+        <tr style="background:{{r.bg}}"><td style="text-align:left">{{r.name}}</td><td>{{r.sim}}</td><td>{{r.val}}</td><td style="color:{{r.col}};font-weight:600">{{r.used}}</td></tr>
+      </sc-for>
+    </table>
+    <label style="display:flex;flex-direction:column;gap:6px;font-size:18px;margin-top:6px">
+      <span>use the k = <b style="font-size:24px;color:#006ba1">{{k}}</b> nearest neighbours</span>
+      <input type="range" min="1" max="5" step="1" value="{{k}}" onChange="{{onK}}" style="width:100%;height:28px">
+    </label>
+  </div>
+  <div style="position:absolute;left:710px;top:150px;width:506px;display:flex;flex-direction:column;gap:16px">
+    <div style="font-size:18px;color:#525252">similarity-weighted average</div>
+    <div style="font-size:24px;line-height:1.4;padding:14px 16px;background:#f7f7f7">{{formula}}</div>
+    <div style="display:flex;gap:14px;align-items:baseline">
+      <div style="font-size:60px;font-weight:700;color:#f04e26;line-height:1">{{pred}}</div>
+      <div style="font-size:19px;color:#333333">predicted Tbr1</div>
+    </div>
+    <div style="font-size:18px;line-height:1.4;color:#333333">Small k: one odd neighbour decides. Large k: dissimilar cells dilute the answer. The SpaGE paper used k = 50.</div>
+    <div style="background:#fef1ee;padding:12px 16px;font-size:17px;line-height:1.4;color:#6c2311">A prediction can only be a mixture of what the reference holds. A cell state missing from the reference cannot be predicted.</div>
+  </div>
+  <div style="position:absolute;left:64px;right:64px;bottom:0;height:48px;border-top:1px solid #dedede;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div style="font-size:12px;color:#737373">Toy numbers and a simple similarity weighting for intuition; SpaGE's exact weights: Abdelaal et al., NAR 2020.</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:14px;color:#525252">
+      <a href="s10.dc.html" aria-label="Previous slide" style="text-decoration:none;padding:8px 10px">←</a>
+      <span>11 / 24</span>
+      <a href="s12.dc.html" aria-label="Next slide" style="text-decoration:none;padding:8px 10px">→</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const k = (this.state && this.state.k) || 3;
+    const data = [['A', 0.92, 4], ['B', 0.88, 6], ['C', 0.80, 5], ['D', 0.41, 1], ['E', 0.30, 0]];
+    const rows = data.map(([name, sim, val], i) => ({ name, sim: sim.toFixed(2), val, used: i < k ? 'yes' : '—', col: i < k ? '#006ba1' : '#9e9e9e', bg: i < k ? '#ebf6fb' : '#ffffff' }));
+    const used = data.slice(0, k);
+    const num = used.reduce((a, [, s, v]) => a + s * v, 0), den = used.reduce((a, [, s]) => a + s, 0);
+    const formula = '(' + used.map(([, s, v]) => s.toFixed(2) + '·' + v).join(' + ') + ') / ' + den.toFixed(2);
+    return { k, rows, formula, pred: (num / den).toFixed(2), onK: (e) => this.setState({ k: Number(e.target.value) }) };
+  }
+}
+</script>
+</body>
+</html>

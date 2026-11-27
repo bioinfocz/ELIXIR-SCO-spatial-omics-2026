@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reference: scRNA-seq atlas</title>
+<script src="./support.js"></script>
+<script src="./deck.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0089cf}a:hover{color:#006ba1}
+@keyframes bar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.bar{transform-origin:left center;animation:bar .8s cubic-bezier(.2,0,.2,1) both}
+</style>
+</helmet>
+<div style="width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#ffffff;font-family:'Barlow Semi Condensed',sans-serif;color:#000000">
+  <div style="position:absolute;left:64px;top:40px;right:64px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f04e26">The data · reference</div>
+      <h2 style="margin:0;font-size:38px;line-height:1.1;font-weight:700;letter-spacing:-0.01em">Reference: the Allen whole-brain scRNA-seq atlas</h2>
+    </div>
+    <div style="position:absolute;right:0;top:-8px;display:flex;gap:4px">
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#0089cf;color:#ffffff">Data</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">SpaGE</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Tangram</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">cell2location</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Compare</span>
+    </div>
+  </div>
+  <div style="position:absolute;left:64px;top:140px;width:500px;display:flex;flex-direction:column;gap:6px">
+    <img src="figs/l5/sc_umap_classes.png" alt="UMAP of 28,981 reference cells, coloured by atlas class; separate islands for neuron classes and glia" style="width:500px;height:470px;object-fit:contain">
+    <div style="font-size:15px;color:#525252">Reference subset (UMAP) in the class colours of the spatial map; grey = no label</div>
+  </div>
+  <div style="position:absolute;left:610px;top:146px;width:606px;display:flex;flex-direction:column;gap:12px">
+    <div style="font-size:19px;line-height:1.4;color:#333333">The full atlas: about <b>7 million</b> cells profiled, <b>4.0 million</b> after QC, 10x v2, v3 and multiome. Its taxonomy has four levels:</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <sc-for list="{{levels}}" as="l" hint-placeholder-count="4">
+        <div style="display:grid;grid-template-columns:110px minmax(0,1fr) 70px;gap:10px;align-items:center">
+          <div style="font-size:18px;font-weight:600">{{l.name}}</div>
+          <div style="height:22px;background:#f7f7f7"><div class="bar" style="height:22px;width:{{l.w}}%;background:{{l.c}};animation-delay:{{l.t}}s"></div></div>
+          <div style="font-size:18px;text-align:right;font-weight:600">{{l.n}}</div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="font-size:15px;color:#525252">bar length on a log scale</div>
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:6px">
+      <div style="border:1px solid #dedede;padding:12px 14px"><div style="font-size:34px;font-weight:700;color:#f04e26;line-height:1">28,981</div><div style="font-size:16px;color:#333333;margin-top:4px">cells in our subset</div></div>
+      <div style="border:1px solid #dedede;padding:12px 14px"><div style="font-size:34px;font-weight:700;color:#f04e26;line-height:1">32,285</div><div style="font-size:16px;color:#333333;margin-top:4px">genes per cell</div></div>
+    </div>
+    <div style="background:#fef1ee;padding:12px 16px;font-size:17px;line-height:1.4;color:#6c2311">The full object is about 280 GB, so the practical uses a pre-made subset.</div>
+  </div>
+  <div style="position:absolute;left:64px;right:64px;bottom:0;height:48px;border-top:1px solid #dedede;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div style="font-size:12px;color:#737373">Yao et al., Nature 2023 (cell numbers, taxonomy). Subset and 280 GB: Practical 5 text. UMAP computed here (3,000 HVGs, PCA, scanpy defaults).</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:14px;color:#525252">
+      <a href="s05.dc.html" aria-label="Previous slide" style="text-decoration:none;padding:8px 10px">←</a>
+      <span>06 / 24</span>
+      <a href="s07.dc.html" aria-label="Next slide" style="text-decoration:none;padding:8px 10px">→</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const raw = [['class', 34, '#003e5d'], ['subclass', 338, '#006ba1'], ['supertype', 1201, '#0089cf'], ['cluster', 5322, '#73bee5']];
+    const levels = raw.map(([name, n, c], i) => ({ name, c, n: n.toLocaleString('en-US'), w: (Math.log10(n) / Math.log10(5322) * 100).toFixed(1), t: (0.1 + i * 0.2).toFixed(2) }));
+    return { levels };
+  }
+}
+</script>
+</body>
+</html>

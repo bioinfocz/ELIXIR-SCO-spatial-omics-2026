@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Quality value</title>
+<script src="./support.js"></script>
+<script src="./deck.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0089cf}a:hover{color:#006ba1}
+input[type=range]{accent-color:#0089cf}
+</style>
+</helmet>
+<div style="width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#ffffff;font-family:'Barlow Semi Condensed',sans-serif;color:#000000">
+  <div style="position:absolute;left:64px;top:40px;right:64px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f04e26">Quality control · molecules</div>
+      <h2 style="margin:0;font-size:38px;line-height:1.1;font-weight:700;letter-spacing:-0.01em">Is each dot really that gene? The quality value</h2>
+    </div>
+    <div style="position:absolute;right:0;top:-8px;display:flex;gap:4px">
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Data</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#0089cf;color:#ffffff">QC</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Filter</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Normalize</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Cluster</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Markers</span>
+    </div>
+  </div>
+  <div style="position:absolute;left:64px;top:150px;width:520px;display:flex;flex-direction:column;gap:18px">
+    <div style="font-size:20px;line-height:1.4;color:#333333">The qv uses the same scale as base qualities in FASTQ files (Phred):</div>
+    <div style="font-size:36px;text-align:center;padding:14px 0;background:#f7f7f7">qv = −10 · log<sub style="font-size:20px">10</sub>( P<sub style="font-size:20px">wrong gene</sub> )</div>
+    <div style="font-size:18px;color:#525252">Every +10 means 10× fewer wrong calls. Try it:</div>
+    <label style="display:flex;flex-direction:column;gap:8px;font-size:18px">
+      <span>qv = <b style="font-size:26px;color:#006ba1">{{qv}}</b></span>
+      <input type="range" min="0" max="40" step="1" value="{{qv}}" onChange="{{onQv}}" style="width:100%;height:28px">
+    </label>
+    <div style="display:flex;gap:16px">
+      <div style="flex:1;border:1px solid #dedede;padding:12px 14px">
+        <div style="font-size:15px;color:#525252">chance the gene is wrong</div>
+        <div style="font-size:30px;font-weight:700">{{pText}}</div>
+      </div>
+      <div style="flex:1;border:1px solid #dedede;padding:12px 14px">
+        <div style="font-size:15px;color:#525252">that is about</div>
+        <div style="font-size:30px;font-weight:700">1 in {{oneIn}}</div>
+      </div>
+    </div>
+    <div style="font-size:18px;line-height:1.35;color:#333333">Xenium keeps only dots with <b>qv ≥ 20</b> (≤ 1 wrong in 100) for the count table.</div>
+  </div>
+  <div style="position:absolute;left:640px;top:150px;width:576px;display:flex;flex-direction:column;gap:10px">
+    <img src="figs/l2/qv_hist.png" alt="Histogram of quality values of all gene transcripts; values below 20 in grey, 20 and above in blue, with a large peak at 40" style="width:576px;height:324px;object-fit:contain">
+    <div style="display:flex;gap:16px;align-items:baseline">
+      <div style="font-size:56px;font-weight:700;color:#0089cf;line-height:1">82%</div>
+      <div style="font-size:19px;line-height:1.35;color:#333333">of the 15.6 M gene transcripts in our run pass qv ≥ 20 and enter the count table (12.8 M)</div>
+    </div>
+    <div style="font-size:16px;color:#525252">A low pass rate points to problems with imaging or the tissue: check the images.</div>
+  </div>
+  <div style="position:absolute;left:64px;right:64px;bottom:0;height:48px;border-top:1px solid #dedede;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div style="font-size:12px;color:#737373">Phred-style Q-score per decoded transcript, Q ≥ 20 used: Janesick et al., Nat Commun 2023. Numbers: transcripts.parquet of the Practical 2 dataset.</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:14px;color:#525252">
+      <a href="s07.dc.html" aria-label="Previous slide" style="text-decoration:none;padding:8px 10px">←</a>
+      <span>08 / 26</span>
+      <a href="s09.dc.html" aria-label="Next slide" style="text-decoration:none;padding:8px 10px">→</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const qv = (this.state && this.state.qv != null) ? this.state.qv : 20;
+    const p = Math.pow(10, -qv / 10);
+    const pText = p >= 0.01 ? (p * 100).toFixed(p >= 0.1 ? 0 : 1) + ' %' : (p * 100).toFixed(qv >= 30 ? 2 : 1) + ' %';
+    const oneIn = Math.round(1 / p).toLocaleString('en-US');
+    return { qv, pText, oneIn, onQv: (e) => this.setState({ qv: Number(e.target.value) }) };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Four questions</title>
+<script src="./support.js"></script>
+<script src="./deck.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0089cf}a:hover{color:#006ba1}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.in{animation:rise .5s cubic-bezier(.2,0,.2,1) both}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.pie{animation:spin 8s linear infinite}
+@keyframes hop{0%,20%{transform:translate(0,0)}60%,100%{transform:translate(118px,26px)}}
+.hop{animation:hop 3s cubic-bezier(.2,0,.2,1) infinite alternate}
+@keyframes fillq{0%,30%{background:#ffffff;color:#9e9e9e}60%,100%{background:#fcdfd8;color:#6c2311}}
+.q{animation:fillq 3s ease-in-out infinite alternate}
+@keyframes paint{0%,30%{background:#dedede}60%,100%{background:var(--c)}}
+.paint{animation:paint 3s ease-in-out infinite alternate}
+</style>
+</helmet>
+<div style="width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#ffffff;font-family:'Barlow Semi Condensed',sans-serif;color:#000000">
+  <div style="position:absolute;left:64px;top:40px;right:64px;display:flex;flex-direction:column;gap:6px">
+    <div style="font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f04e26">What integration can answer</div>
+    <h2 style="margin:0;font-size:38px;line-height:1.1;font-weight:700;letter-spacing:-0.01em">Four questions, one reference</h2>
+  </div>
+  <div style="position:absolute;left:64px;top:146px;width:1152px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px">
+    <div class="in" style="display:flex;flex-direction:column;gap:10px;animation-delay:.1s">
+      <div style="height:170px;background:#f7f7f7;border:1px solid #dedede;display:flex;align-items:center;justify-content:center" aria-hidden="true">
+        <div style="display:flex;flex-direction:column;gap:4px;font-size:15px;width:150px">
+          <div style="padding:4px 8px;background:#d1eaf6">Cux2 · measured</div>
+          <div style="padding:4px 8px;background:#d1eaf6">Satb2 · measured</div>
+          <div class="q" style="padding:4px 8px;border:1px dashed #f04e26">Tbr1 · predicted</div>
+          <div class="q" style="padding:4px 8px;border:1px dashed #f04e26">Foxp2 · predicted</div>
+        </div>
+      </div>
+      <div style="font-size:24px;font-weight:700">Imputation</div>
+      <div style="font-size:18px;line-height:1.35;color:#333333">Predict genes that are <b>not on the panel</b> in every spatial cell</div>
+      <div style="font-size:16px;color:#006ba1">Practical 5: SpaGE, Tangram</div>
+    </div>
+    <div class="in" style="display:flex;flex-direction:column;gap:10px;animation-delay:.3s">
+      <div style="height:170px;background:#f7f7f7;border:1px solid #dedede;display:flex;align-items:center;justify-content:center" aria-hidden="true">
+        <div class="pie" style="width:120px;height:120px;border-radius:50%;background:conic-gradient(#0089cf 0 45%, #f04e26 45% 70%, #003e5d 70% 88%, #73bee5 88% 100%)"></div>
+      </div>
+      <div style="font-size:24px;font-weight:700">Deconvolution</div>
+      <div style="font-size:18px;line-height:1.35;color:#333333">How many cells of each type are inside a <b>spot</b>?</div>
+      <div style="font-size:16px;line-height:1.3;color:#006ba1">Practical 5: cell2location (built for <b>sequencing spots</b>)</div>
+    </div>
+    <div class="in" style="display:flex;flex-direction:column;gap:10px;animation-delay:.5s">
+      <div style="height:170px;background:#f7f7f7;border:1px solid #dedede;position:relative" aria-hidden="true">
+        <div style="position:absolute;left:130px;top:30px;width:110px;height:110px;border-radius:50% 45% 50% 40%;border:2px solid #9e9e9e;background:#ffffff"></div>
+        <div class="hop" style="position:absolute;left:30px;top:60px;width:24px;height:24px;border-radius:50%;background:#f04e26"></div>
+      </div>
+      <div style="font-size:24px;font-weight:700">Localization</div>
+      <div style="font-size:18px;line-height:1.35;color:#333333">Where in the tissue did each <b>dissociated cell</b> come from?</div>
+      <div style="font-size:16px;color:#006ba1">Practical 5: Tangram</div>
+    </div>
+    <div class="in" style="display:flex;flex-direction:column;gap:10px;animation-delay:.7s">
+      <div style="height:170px;background:#f7f7f7;border:1px solid #dedede;display:grid;grid-template-columns:repeat(5,22px);gap:8px;align-content:center;justify-content:center" aria-hidden="true">
+        <sc-for list="{{dots}}" as="d" hint-placeholder-count="20"><div class="paint" style="width:22px;height:22px;border-radius:50%;--c:{{d.c}};animation-delay:{{d.t}}s"></div></sc-for>
+      </div>
+      <div style="font-size:24px;font-weight:700">Label transfer</div>
+      <div style="font-size:18px;line-height:1.35;color:#333333">Give spatial cells the <b>cell-type names</b> of a reference atlas</div>
+      <div style="font-size:16px;color:#006ba1">Tangram projections; foundation models</div>
+    </div>
+  </div>
+  <div class="in" style="position:absolute;left:64px;top:520px;width:1152px;box-sizing:border-box;background:#ebf6fb;padding:18px 22px;font-size:20px;line-height:1.45;color:#003e5d;animation-delay:1s">
+    All four rely on the same assumption: <b>the reference contains the same cell types, measured in a comparable way.</b> When that fails, every method still returns an answer.
+  </div>
+  <div style="position:absolute;left:64px;right:64px;bottom:0;height:48px;border-top:1px solid #dedede;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div style="font-size:12px;color:#737373">Task categories after A. Mahfouz's lecture (localization, deconvolution, imputation, annotation transfer).</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:14px;color:#525252">
+      <a href="s02.dc.html" aria-label="Previous slide" style="text-decoration:none;padding:8px 10px">←</a>
+      <span>03 / 24</span>
+      <a href="s04.dc.html" aria-label="Next slide" style="text-decoration:none;padding:8px 10px">→</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const cols = ['#0089cf', '#f04e26', '#003e5d', '#73bee5'];
+    const pattern = [0, 0, 1, 0, 2, 0, 1, 1, 0, 3, 2, 0, 1, 3, 3, 0, 2, 1, 0, 3];
+    const dots = pattern.map((p, i) => ({ c: cols[p], t: (i * 0.06).toFixed(2) }));
+    return { dots };
+  }
+}
+</script>
+</body>
+</html>

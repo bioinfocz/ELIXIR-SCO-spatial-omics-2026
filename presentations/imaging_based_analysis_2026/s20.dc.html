@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pearson residuals</title>
+<script src="./support.js"></script>
+<script src="./deck.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0089cf}a:hover{color:#006ba1}
+input[type=range]{accent-color:#0089cf}
+code{font-family:inherit;font-weight:600;color:#006ba1}
+</style>
+</helmet>
+<div style="width:1280px;height:720px;box-sizing:border-box;position:relative;overflow:hidden;background:#ffffff;font-family:'Barlow Semi Condensed',sans-serif;color:#000000">
+  <div style="position:absolute;left:64px;top:40px;right:64px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f04e26">Normalization · option 3</div>
+      <h2 style="margin:0;font-size:38px;line-height:1.1;font-weight:700;letter-spacing:-0.01em">Pearson residuals: how surprising is this count?</h2>
+    </div>
+    <div style="position:absolute;right:0;top:-8px;display:flex;gap:4px">
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Data</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">QC</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Filter</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#0089cf;color:#ffffff">Normalize</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Cluster</span>
+      <span style="font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:#ebf6fb;color:#006ba1">Markers</span>
+    </div>
+  </div>
+  <div style="position:absolute;left:64px;top:146px;width:560px;display:flex;flex-direction:column;gap:10px">
+    <div style="font-size:20px;line-height:1.4;color:#333333"><b>Step 1 · expected count μ</b>: the count this cell would have if the gene took the same share of every cell</div>
+    <div style="font-size:26px;text-align:center;padding:10px 0;background:#f7f7f7">μ = <span style="color:#bb3d1e">cell total</span> × <span style="color:#006ba1">gene total</span> / all counts</div>
+    <div style="display:flex;gap:20px;align-items:flex-start">
+      <div style="display:grid;grid-template-columns:62px repeat(3,48px) 58px;gap:3px;font-size:16px"><div></div><div style="display:flex;align-items:center;justify-content:center;height:26px;color:#525252">gene 1</div><div style="display:flex;align-items:center;justify-content:center;height:26px;color:#525252">gene 2</div><div style="display:flex;align-items:center;justify-content:center;height:26px;color:#525252">gene 3</div><div style="display:flex;align-items:center;justify-content:center;height:26px;color:#525252">total</div><div style="display:flex;align-items:center;justify-content:center;height:26px;justify-content:flex-start;font-weight:600">cell A</div><div style="display:flex;align-items:center;justify-content:center;height:26px;background:#f7f7f7">5</div><div style="display:flex;align-items:center;justify-content:center;height:26px;background:#f7f7f7">1</div><div style="display:flex;align-items:center;justify-content:center;height:26px;background:#f7f7f7">4</div><div style="display:flex;align-items:center;justify-content:center;height:26px;background:#fcdfd8;color:#bb3d1e;font-weight:400">10</div><div style="display:flex;align-items:center;justify-content:center;height:26px;justify-content:flex-start;font-weight:600">cell B</div><div style="display:flex;align-items:center;justify-content:center;height:26px;background:#ffffff;border:2px solid #003e5d;font-weight:700;box-sizing:border-box">2</div><div style="display:flex;align-items:center;justify-content:center;height:26px;background:#f7f7f7">0</div><div style="display:flex;align-items:center;justify-content:center;height:26px;background:#f7f7f7">3</div><div style="display:flex;align-items:center;justify-content:center;height:26px;background:#fcdfd8;color:#bb3d1e;font-weight:700">5</div><div style="display:flex;align-items:center;justify-content:center;height:26px;justify-content:flex-start;font-weight:600">cell C</div><div style="display:flex;align-items:center;justify-content:center;height:26px;background:#f7f7f7">13</div><div style="display:flex;align-items:center;justify-content:center;height:26px;background:#f7f7f7">4</div><div style="display:flex;align-items:center;justify-content:center;height:26px;background:#f7f7f7">8</div><div style="display:flex;align-items:center;justify-content:center;height:26px;background:#fcdfd8;color:#bb3d1e;font-weight:400">25</div><div style="display:flex;align-items:center;justify-content:center;height:26px;justify-content:flex-start;font-weight:600">total</div><div style="display:flex;align-items:center;justify-content:center;height:26px;background:#d1eaf6;color:#006ba1;font-weight:700">20</div><div style="display:flex;align-items:center;justify-content:center;height:26px;background:#d1eaf6;color:#006ba1;font-weight:400">5</div><div style="display:flex;align-items:center;justify-content:center;height:26px;background:#d1eaf6;color:#006ba1;font-weight:400">15</div><div style="display:flex;align-items:center;justify-content:center;height:26px;background:#dedede;font-weight:700">40</div></div>
+      <div style="display:flex;flex-direction:column;gap:5px;font-size:16px;line-height:1.3;color:#333333">
+        <div><b style="color:#bb3d1e">cell total</b> = row sum: all counts in the cell (its size)</div>
+        <div><b style="color:#006ba1">gene total</b> = column sum: the gene in all cells</div>
+        <div><b>all counts</b> = the whole table</div>
+        <div style="color:#003e5d">Cell B, gene 1: μ = 5 × 20 / 40 = <b>2.5</b> (observed 2)</div>
+      </div>
+    </div>
+    <div style="font-size:20px;line-height:1.4;color:#333333"><b>Step 2 · residual</b>: (observed − expected) / expected spread</div>
+    <div style="font-size:26px;text-align:center;padding:10px 0;background:#f7f7f7">r = ( x − μ ) / √( μ + μ² / θ )</div>
+  </div>
+  <div style="position:absolute;left:670px;top:146px;width:546px;display:flex;flex-direction:column;gap:12px">
+    <div style="font-size:18px;font-weight:600;color:#006ba1">Toy: the gene is 5% of all counts; a cell with 200 counts → μ = 10</div>
+    <label style="display:flex;flex-direction:column;gap:8px;font-size:18px">
+      <span>observed count x = <b style="font-size:26px;color:#006ba1">{{x}}</b></span>
+      <input type="range" min="0" max="40" step="1" value="{{x}}" onChange="{{onX}}" style="width:100%;height:28px">
+    </label>
+    <div style="position:relative;height:120px;background:#f7f7f7;border:1px solid #dedede">
+      <div style="position:absolute;left:50%;top:0;bottom:0;width:2px;background:#9e9e9e"></div>
+      <div style="position:absolute;top:36px;height:48px;left:{{barLeft}}%;width:{{barW}}%;background:{{barCol}};transition:all .2s"></div>
+      <div style="position:absolute;left:4px;bottom:4px;font-size:14px;color:#525252">−6</div>
+      <div style="position:absolute;left:50%;bottom:4px;font-size:14px;color:#525252;transform:translateX(-50%)">0</div>
+      <div style="position:absolute;right:4px;bottom:4px;font-size:14px;color:#525252">+6</div>
+    </div>
+    <div style="display:flex;gap:14px;align-items:baseline">
+      <div style="font-size:48px;font-weight:700;line-height:1;color:{{barCol}}">r = {{r}}</div>
+      <div style="font-size:19px;color:#333333">{{verdict}}</div>
+    </div>
+    <div style="background:#ebf6fb;padding:10px 16px;font-size:17px;line-height:1.4;color:#003e5d">r ≈ 0: as expected · r ≫ 0: more (a marker!) · r &lt; 0: less. No log, no pseudocount.</div>
+  </div>
+  <div style="position:absolute;left:64px;right:64px;bottom:0;height:48px;border-top:1px solid #dedede;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div style="font-size:12px;color:#737373">Lause, Berens &amp; Kobak, Genome Biol 2021 (equations for μ and r, clipping); idea from sctransform, Hafemeister &amp; Satija, Genome Biol 2019. Toy numbers for intuition.</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:14px;color:#525252">
+      <a href="s19.dc.html" aria-label="Previous slide" style="text-decoration:none;padding:8px 10px">←</a>
+      <span>20 / 26</span>
+      <a href="s21.dc.html" aria-label="Next slide" style="text-decoration:none;padding:8px 10px">→</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const x = (this.state && this.state.x != null) ? this.state.x : 25;
+    const mu = 10, theta = 100;
+    const r = (x - mu) / Math.sqrt(mu + mu * mu / theta);
+    const c = Math.max(-6, Math.min(6, r));
+    const w = Math.abs(c) / 12 * 100;
+    const barLeft = c >= 0 ? 50 : 50 - w;
+    const verdict = Math.abs(r) < 1 ? 'about as expected' : (r > 0 ? 'more than expected' : 'less than expected');
+    return { x, r: r.toFixed(2), barLeft: barLeft.toFixed(1), barW: w.toFixed(1), barCol: r >= 0 ? '#0089cf' : '#f04e26', verdict,
+      onX: (e) => this.setState({ x: Number(e.target.value) }) };
+  }
+}
+</script>
+</body>
+</html>
